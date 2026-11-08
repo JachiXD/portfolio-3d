@@ -46,9 +46,14 @@ function Pages() {
   )
 }
 
+// Vite's base is "/" locally and "/portfolio-3d/" on GitHub Pages. React
+// Router wants the same prefix without a trailing slash so every Link and
+// route resolves under the project site.
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
+
 export function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Preloader />
       <ScrollManager />
       <Nav />
