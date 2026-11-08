@@ -5,6 +5,10 @@ import { site } from '../../data/site'
 import { Lines, Magnetic, Reveal } from './motion'
 import { useLocalTime } from './Nav'
 
+// The GitHub Pages build is static, so the contact form hands the message to
+// the visitor's mail client instead of posting to the Worker.
+const staticHost = import.meta.env.MODE === 'pages'
+
 export function Footer() {
   const time = useLocalTime()
   const [form, setForm] = useState({ name: '', email: '', message: '' })
@@ -13,6 +17,13 @@ export function Footer() {
 
   async function submit(e: FormEvent) {
     e.preventDefault()
+    if (staticHost) {
+      const subject = encodeURIComponent(`Portfolio enquiry from ${form.name}`)
+      const body = encodeURIComponent(`${form.message}\n\n— ${form.name}\n${form.email}`)
+      window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`
+      setState('done')
+      return
+    }
     setState('sending')
     const response = await fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(form) })
     if (response.ok) setState('done')

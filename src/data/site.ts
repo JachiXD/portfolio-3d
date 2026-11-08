@@ -1,5 +1,9 @@
 // Everything about you lives here. The pages read from this file.
 
+// Vite's base is "/" locally and "/portfolio-3d/" on GitHub Pages, so images
+// referenced from data have to carry that prefix too.
+export const asset = (file: string) => `${import.meta.env.BASE_URL}images/${file}`
+
 export const site = {
   name: 'Jay Takle',
   role: 'AI & machine learning developer',
@@ -39,7 +43,7 @@ export const projects: Project[] = [
     title: 'Saarthi',
     client: 'CBSE competition',
     category: 'Voice assistant & LLM',
-    cover: '/images/saarthi.svg',
+    cover: asset('saarthi.svg'),
     tint: '#1c1a18',
     summary: 'A voice-first school assistant that gives directions to nine campus locations, takes reports of bullying or weapons, and calls Gemini when a scripted answer is not enough.',
     role: ['Speech recognition', 'Intent flow', 'LLM integration'],
@@ -57,7 +61,7 @@ export const projects: Project[] = [
     title: 'Weapon Detection',
     client: 'Independent',
     category: 'Real-time computer vision',
-    cover: '/images/weapon-detection.svg',
+    cover: asset('weapon-detection.svg'),
     tint: '#151221',
     summary: 'A webcam detector for guns and knives, rebuilt from YOLOv4 through YOLOv8 to a small custom cascade, with the frame budget always in view.',
     role: ['Model integration', 'ONNX export', 'Real-time inference'],
