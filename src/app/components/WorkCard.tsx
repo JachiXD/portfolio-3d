@@ -31,7 +31,7 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
         <Link
           ref={ref}
           to={`/work/${project.slug}`}
-          className="group relative block"
+          className="group relative block border border-line bg-surface p-2 transition-colors hover:border-accent/60"
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => {
             setHover(false)
@@ -43,38 +43,47 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
             if (!rect) return
             x.set(e.clientX - rect.left)
             y.set(e.clientY - rect.top)
-            rotateY.set(((e.clientX - rect.left) / rect.width - 0.5) * 11)
-            rotateX.set(-((e.clientY - rect.top) / rect.height - 0.5) * 11)
+            rotateY.set(((e.clientX - rect.left) / rect.width - 0.5) * 9)
+            rotateX.set(-((e.clientY - rect.top) / rect.height - 0.5) * 9)
           }}
         >
+          <div className="flex items-center justify-between gap-3 px-1 pb-2 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">
+            <span className="text-accent">FILE // 00{index + 1}</span>
+            <span>CLASS: {project.category}</span>
+          </div>
+
           <div
-            className={cx('relative overflow-hidden rounded-image will-change-transform', project.size === 'large' ? 'aspect-[16/10]' : 'aspect-[4/5] md:aspect-[4/4.6]')}
+            className={cx('notch relative overflow-hidden', project.size === 'large' ? 'aspect-[16/10]' : 'aspect-[4/5] md:aspect-[4/4.6]')}
             style={{ background: project.tint, transform: 'translateZ(30px)' }}
           >
             <div className="absolute inset-0 transition-transform duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]">
               <Parallax src={project.cover} alt={project.title} className="size-full" strength={6} />
             </div>
-            <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-black/10 opacity-80" />
-            <span className="absolute left-4 top-4 rounded-full border border-white/25 bg-black/35 px-3 py-1 text-[10.5px] uppercase tracking-[0.16em] text-white/85 backdrop-blur-sm">
-              {project.year ? `${project.year} · ` : ''}
+            <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/20" />
+            <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 border border-white/20 bg-black/50 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm">
+              <span className="size-1 bg-accent-2" />
+              {project.year ? `${project.year} // ` : ''}
               {project.category}
             </span>
             <motion.span
               aria-hidden
               style={{ x, y }}
               className={cx(
-                'pointer-events-none absolute left-0 top-0 hidden -translate-x-1/2 -translate-y-1/2 items-center rounded-[14px] bg-fg px-4 py-2.5 text-[13px] font-medium text-bg transition-[opacity,scale] duration-300 md:flex',
+                'pointer-events-none absolute left-0 top-0 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-2 bg-accent px-3 py-2 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-black transition-[opacity,scale] duration-300 md:flex',
                 hover ? 'scale-100 opacity-100' : 'scale-75 opacity-0',
               )}
             >
-              View project
+              OPEN FILE
+              <span aria-hidden>↗</span>
             </motion.span>
+            <span aria-hidden className="absolute bottom-3 right-3 font-mono text-[8px] uppercase tracking-[0.18em] text-white/50">SCALE 1:1</span>
           </div>
-          <div className="mt-4 flex items-baseline justify-between gap-4" style={{ transform: 'translateZ(16px)' }}>
-            <h3 className="font-display text-[28px] sm:text-[32px]">{project.title}</h3>
-            <p className="shrink-0 text-[13.5px] text-muted">
+
+          <div className="mt-3 flex items-baseline justify-between gap-4 px-1" style={{ transform: 'translateZ(16px)' }}>
+            <h3 className="font-display text-[27px] sm:text-[32px]">{project.title}</h3>
+            <p className="shrink-0 font-mono text-[9px] uppercase tracking-[0.14em] text-muted transition-colors group-hover:text-accent-2">
               {project.client}
-              {project.year && <span className="ml-3 tabular-nums text-faint">{project.year}</span>}
+              {project.year && <span className="ml-2 tabular-nums text-faint">{project.year}</span>}
             </p>
           </div>
         </Link>

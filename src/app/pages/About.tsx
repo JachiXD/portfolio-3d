@@ -6,28 +6,46 @@ import { Lines, Parallax, Reveal } from '../components/motion'
 export function About() {
   return (
     <article className="mx-auto max-w-[1400px] px-5 pt-28 sm:px-8 sm:pt-36">
-      <Lines as="h1" className="font-display text-balance text-[clamp(44px,7.5vw,112px)]" lines={['AI & ML developer,', 'web builder, CBSE winner']} />
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3 font-mono text-[9px] uppercase tracking-[0.22em] text-faint">
+        <span className="text-accent">PERSONNEL FILE // 001</span>
+        <span>
+          SUBJECT: <span className="text-fg">JAY TAKLE</span>
+        </span>
+        <span className="text-accent-2">● CLEARANCE A</span>
+      </div>
+
+      <Lines
+        as="h1"
+        className="font-display mt-10 text-balance text-[clamp(42px,7vw,104px)]"
+        lines={['AI & ML developer,', 'web builder, CBSE winner']}
+      />
+
       <div className="mt-14 grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-24">
         <Reveal>
-          <Parallax src={asset('about.svg')} alt="Abstract render" className="aspect-[3/4] rounded-image" strength={6} />
-          <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[14px]">
+          <div className="relative border border-line bg-surface p-2">
+            <Parallax src={asset('about.svg')} alt="Abstract render" className="aspect-[3/4]" strength={6} />
+            <span className="absolute left-4 top-4 bg-bg/80 px-2 py-1 font-mono text-[8.5px] uppercase tracking-[0.2em] text-accent">VISUAL // SUBJECT</span>
+            <span className="absolute bottom-4 right-4 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">UNIT 01</span>
+          </div>
+          <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[9px] uppercase tracking-[0.16em]">
             {site.socials.map((s) => (
               <li key={s.label}>
-                <a href={s.href} className="link-draw inline-flex items-center gap-1 text-muted hover:text-fg">
+                <a href={s.href} className="inline-flex items-center gap-1 text-muted transition-colors hover:text-accent">
                   {s.label}
-                  <ArrowUpRight className="size-3.5" />
+                  <ArrowUpRight className="size-3" />
                 </a>
               </li>
             ))}
           </ul>
         </Reveal>
+
         <div>
-          <Reveal className="text-pretty text-[19px] leading-relaxed sm:text-[22px]">
+          <Reveal className="border-l-2 border-accent pl-5 text-pretty text-[18px] leading-relaxed sm:text-[21px]">
             <p>
               I am a developer with a deep love for coding and artificial intelligence. My journey so far includes first place in CBSE competitions for an AI chatbot and machine-learning projects, and the work I enjoy most is making intelligent things that people can actually use.
             </p>
           </Reveal>
-          <Reveal delay={0.1} className="mt-8 flex flex-col gap-5 text-[17px] leading-relaxed text-muted">
+          <Reveal delay={0.1} className="mt-8 flex flex-col gap-5 text-[16.5px] leading-relaxed text-muted">
             <p>
               My expertise spans web development, AI implementation and user-friendly interfaces. I am particularly interested in how AI can be used to create better experiences and solve real-world problems, rather than just demonstrate that a model works.
             </p>
@@ -37,15 +55,20 @@ export function About() {
           </Reveal>
 
           <Reveal delay={0.15} className="mt-16">
-            <h2 className="text-[14px] text-muted">Career goals</h2>
-            <div className="mt-4 grid gap-x-10 gap-y-8 border-t border-line pt-6 sm:grid-cols-2">
+            <div className="flex items-center justify-between gap-4 border-b border-line pb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-faint">
+              <span>
+                <span className="text-accent">02</span> // CAREER GOALS
+              </span>
+              <span className="jp text-[11px] tracking-[0.12em] text-muted">目標</span>
+            </div>
+            <div className="mt-6 grid gap-x-10 gap-y-8 sm:grid-cols-2">
               {goals.map((group) => (
                 <div key={group.horizon}>
-                  <h3 className="text-[12px] uppercase tracking-[0.18em] text-accent">{group.horizon}</h3>
-                  <ul className="mt-4 flex flex-col gap-2.5 text-[15px] leading-relaxed text-muted">
+                  <h3 className="font-mono text-[9px] uppercase tracking-[0.2em] text-accent-2">{group.horizon}</h3>
+                  <ul className="mt-4 flex flex-col gap-2.5 text-[14.5px] leading-relaxed text-muted">
                     {group.items.map((item) => (
                       <li key={item} className="flex gap-2.5">
-                        <span aria-hidden className="mt-[0.55em] size-1 shrink-0 rounded-full bg-faint" />
+                        <span aria-hidden className="mt-[0.6em] size-1 shrink-0 bg-accent" />
                         {item}
                       </li>
                     ))}
@@ -55,15 +78,15 @@ export function About() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.2} className="mt-16 grid grid-cols-3 gap-6">
+          <Reveal delay={0.2} className="mt-16 grid grid-cols-3 border border-line bg-surface/60">
             {[
-              ['1st', 'CBSE competition'],
-              ['2', 'featured projects'],
-              ['12', 'tools in the stack'],
+              ['1ST', 'CBSE COMPETITION'],
+              ['02', 'FEATURED PROJECTS'],
+              ['12', 'TOOLS IN THE STACK'],
             ].map(([value, label]) => (
-              <div key={label}>
-                <p className="font-display text-[52px] leading-none sm:text-[72px]">{value}</p>
-                <p className="mt-2 text-[14px] text-muted">{label}</p>
+              <div key={label} className="border-l border-line p-4 first:border-l-0 sm:p-6">
+                <p className="font-display text-[44px] leading-none sm:text-[60px]">{value}</p>
+                <p className="mt-3 font-mono text-[8px] uppercase leading-relaxed tracking-[0.16em] text-muted">{label}</p>
               </div>
             ))}
           </Reveal>
