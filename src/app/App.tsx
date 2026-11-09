@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useEffect } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router'
 
+import { EvaChrome } from './components/EvaChrome'
 import { Footer } from './components/Footer'
 import { Nav } from './components/Nav'
 import { Preloader } from './components/Preloader'
@@ -57,6 +58,7 @@ export function App() {
       <Preloader />
       <ScrollManager />
       <Nav />
+      <EvaChrome />
       <Pages />
       <Footer />
     </BrowserRouter>

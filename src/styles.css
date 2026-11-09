@@ -5,22 +5,27 @@
 @theme {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: 'Bricolage Grotesque Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
-  --color-bg: #0b0a09;
-  --color-surface: #121110;
-  --color-surface-2: #191614;
-  --color-line: #262220;
-  --color-line-strong: #3a342e;
-  --color-fg: #f5f1e8;
-  --color-muted: #a49d90;
-  --color-faint: #756e63;
-  --color-accent: #ff5a2b;
+  /* NERV terminal palette: near-black, hazard orange, acid green, Unit-01 violet. */
+  --color-bg: #06060a;
+  --color-surface: #0c0c13;
+  --color-surface-2: #12121c;
+  --color-line: #232331;
+  --color-line-strong: #3b3b50;
+  --color-fg: #f0eee4;
+  --color-muted: #9a97a8;
+  --color-faint: #6c697c;
+  --color-accent: #ff6a00;
+  --color-accent-2: #a8ff35;
+  --color-accent-3: #8b5cff;
+  --color-alert: #ff2d55;
 
-  --radius-control: 14px;
-  --radius-card: 24px;
-  --radius-image: 28px;
+  --radius-control: 2px;
+  --radius-card: 2px;
+  --radius-image: 2px;
 
-  --animate-marquee: marquee 34s linear infinite;
+  --animate-marquee: marquee 44s linear infinite;
   @keyframes marquee {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
@@ -31,13 +36,7 @@
   *,
   *::before,
   *::after {
-    corner-shape: squircle;
     border-color: var(--color-line);
-  }
-  .round,
-  .round::before,
-  .round::after {
-    corner-shape: round;
   }
   html {
     background: var(--color-bg);
@@ -49,7 +48,7 @@
     color: var(--color-fg);
     font-family: var(--font-sans);
     font-size: 15px;
-    letter-spacing: -0.008em;
+    letter-spacing: -0.005em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -63,12 +62,12 @@
     color: inherit;
   }
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-accent-2);
     outline-offset: 3px;
   }
   ::selection {
     background: var(--color-accent);
-    color: #120b08;
+    color: #08070c;
   }
   img {
     user-select: none;
@@ -80,12 +79,11 @@
     background: var(--color-bg);
   }
   ::-webkit-scrollbar-thumb {
-    background: #2e2925;
+    background: #43301f;
     border: 3px solid var(--color-bg);
-    border-radius: 999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #443c34;
+    background: var(--color-accent);
   }
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -97,22 +95,14 @@
   }
 }
 
-/* Display type: Bricolage's optical size and width axes give it character at
-   scale; keep the tracking tight and the leading tighter. */
+/* Display type is condensed and shouted, like the show's title cards. */
 @utility font-display {
   font-family: var(--font-display);
-  font-variation-settings: 'opsz' 96, 'wdth' 100;
-  font-weight: 500;
-  letter-spacing: -0.035em;
-  line-height: 0.95;
-}
-
-@utility font-display-wide {
-  font-family: var(--font-display);
-  font-variation-settings: 'opsz' 96, 'wdth' 112;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 0.92;
+  font-variation-settings: 'opsz' 96, 'wdth' 82;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  line-height: 0.86;
 }
 
 @utility text-balance {
@@ -134,13 +124,53 @@
   }
 }
 
-/* Image containers read as a slightly lifted card on the dark canvas. */
 @utility image-frame {
   background: var(--color-surface-2);
   overflow: hidden;
 }
 
-/* Project cards tilt in 3D; their inner layers sit at different depths. */
+/* Angled panel corners, used on covers and buttons. */
+@utility notch {
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+@utility notch-sm {
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+}
+
+/* NERV hazard tape. */
+@utility hazard-strip {
+  background-image: repeating-linear-gradient(-45deg, var(--color-accent) 0 9px, #08070c 9px 18px);
+}
+
+/* CRT scanlines, kept very faint so body text stays readable. */
+@utility scanlines {
+  background-image: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.34) 0 1px, transparent 1px 3px);
+}
+
+/* MAGI-style blueprint grid. */
+@utility grid-bg {
+  background-image:
+    linear-gradient(rgb(168 255 53 / 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(168 255 53 / 0.045) 1px, transparent 1px);
+  background-size: 52px 52px;
+}
+
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(240 238 228 / 0.2);
+}
+
+@utility jp {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
+  letter-spacing: 0.08em;
+}
+
+@utility glitch {
+  text-shadow:
+    2px 0 rgb(255 45 85 / 0.35),
+    -2px 0 rgb(168 255 53 / 0.22);
+}
+
 @utility card-3d {
   transform-style: preserve-3d;
   will-change: transform;
@@ -148,17 +178,4 @@
 
 @utility layer-lift {
   transform: translateZ(46px);
-}
-
-/* Film grain, tuned for dark surfaces. */
-@utility grain {
-  opacity: 0.5;
-  mix-blend-mode: soft-light;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>");
-}
-
-/* Fine dotted grid used behind sections for a blueprint feel. */
-@utility dot-grid {
-  background-image: radial-gradient(rgb(245 241 232 / 0.09) 1px, transparent 1px);
-  background-size: 26px 26px;
 }
