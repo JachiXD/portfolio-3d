@@ -6,6 +6,8 @@ export const asset = (file: string) => `${import.meta.env.BASE_URL}images/${file
 
 export const site = {
   name: 'Jay Takle',
+  brand: 'JACHI_PORTFOLIO',
+  unit: 'EVA-01',
   role: 'AI & machine learning developer',
   location: 'India',
   timezone: 'Asia/Kolkata',
@@ -44,7 +46,7 @@ export const projects: Project[] = [
     client: 'CBSE competition',
     category: 'Voice assistant & LLM',
     cover: asset('saarthi.svg'),
-    tint: '#1c1a18',
+    tint: '#120d1c',
     summary: 'A voice-first school assistant that gives directions to nine campus locations, takes reports of bullying or weapons, and calls Gemini when a scripted answer is not enough.',
     role: ['Speech recognition', 'Intent flow', 'LLM integration'],
     deliverables: ['Offline voice loop', 'Synonym-based intent matching', 'Gemini safety responses'],
@@ -62,7 +64,7 @@ export const projects: Project[] = [
     client: 'Independent',
     category: 'Real-time computer vision',
     cover: asset('weapon-detection.svg'),
-    tint: '#151221',
+    tint: '#0a1114',
     summary: 'A webcam detector for guns and knives, rebuilt from YOLOv4 through YOLOv8 to a small custom cascade, with the frame budget always in view.',
     role: ['Model integration', 'ONNX export', 'Real-time inference'],
     deliverables: ['Trained detector', 'ONNX export', 'Live OpenCV demo'],

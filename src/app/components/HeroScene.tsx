@@ -3,8 +3,9 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 
-const EMBER = '#ff5a2b'
-const COOL = '#8491ff'
+const EMBER = '#ff6a00'
+const COOL = '#a8ff35'
+const VIOLET = '#8b5cff'
 
 /** Follows the OS setting live, so the scene stops moving when asked to. */
 function usePrefersReducedMotion() {
@@ -69,7 +70,7 @@ function Core({ reduced }: { reduced: boolean }) {
         <mesh>
           <sphereGeometry args={[1.26, 128, 128]} />
           <MeshDistortMaterial
-            color="#241b16"
+            color="#1b1227"
             metalness={1}
             roughness={0.14}
             distort={0.34}
@@ -82,7 +83,7 @@ function Core({ reduced }: { reduced: boolean }) {
 
         <mesh ref={shell}>
           <icosahedronGeometry args={[1.62, 1]} />
-          <meshBasicMaterial color={EMBER} wireframe transparent opacity={0.13} />
+          <meshBasicMaterial color={EMBER} wireframe transparent opacity={0.2} />
         </mesh>
 
         <group ref={orbit} rotation={[Math.PI / 2.15, 0.18, 0]}>
@@ -92,18 +93,18 @@ function Core({ reduced }: { reduced: boolean }) {
           </mesh>
           <mesh position={[2.02, 0, 0]}>
             <sphereGeometry args={[0.048, 16, 16]} />
-            <meshBasicMaterial color="#ffd8c6" />
+            <meshBasicMaterial color="#e6ffd0" />
           </mesh>
         </group>
 
         <group ref={counter} rotation={[Math.PI / 1.6, -0.45, 0.55]}>
           <mesh>
             <torusGeometry args={[2.42, 0.004, 8, 240]} />
-            <meshBasicMaterial color={COOL} transparent opacity={0.38} />
+            <meshBasicMaterial color={VIOLET} transparent opacity={0.5} />
           </mesh>
         </group>
 
-        <Sparkles count={64} scale={[7, 5.5, 5]} size={2.4} speed={reduced ? 0 : 0.3} color="#ffe0cf" opacity={0.5} />
+        <Sparkles count={64} scale={[7, 5.5, 5]} size={2.4} speed={reduced ? 0 : 0.3} color="#ffe9d6" opacity={0.5} />
       </group>
     </Float>
   )
@@ -130,7 +131,7 @@ export function HeroScene() {
     <div aria-hidden className="absolute inset-0 overflow-hidden">
       {/* Warm halo under the canvas: keeps the hero alive while WebGL boots
           and holds the composition together on machines without it. */}
-      <div className="absolute left-1/2 top-[38%] size-[78vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_90_43/0.20),rgb(132_145_255/0.10)_55%,transparent_72%)] blur-2xl" />
+      <div className="absolute left-1/2 top-[38%] size-[78vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_106_0/0.20),rgb(139_92_255/0.16)_50%,rgb(168_255_53/0.07)_70%,transparent_82%)] blur-2xl" />
       {supported && (
         <Canvas
           dpr={[1, 1.8]}
@@ -144,7 +145,8 @@ export function HeroScene() {
             <pointLight position={[0, 4, -2]} intensity={18} distance={14} color="#fff1e4" />
             <Environment resolution={128}>
               <Lightformer form="ring" intensity={5} color={EMBER} position={[3, 2.5, 2]} scale={4} />
-              <Lightformer form="rect" intensity={2.4} color={COOL} position={[-4, -2, 1]} scale={[5, 2, 1]} />
+              <Lightformer form="rect" intensity={2.4} color={VIOLET} position={[-4, -2, 1]} scale={[5, 2, 1]} />
+              <Lightformer form="rect" intensity={1.4} color={COOL} position={[2, -3, 2]} scale={[3, 1, 1]} />
               <Lightformer form="rect" intensity={1.6} color="#fff4e8" position={[0, 5, -3]} scale={[8, 3, 1]} />
             </Environment>
             <Core reduced={reduced} />
