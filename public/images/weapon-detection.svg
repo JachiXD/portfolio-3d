@@ -1,32 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img" aria-label="Weapon detection console: camera frame and the YOLO to ONNX to Haar cascade pipeline">
   <defs>
     <radialGradient id="violet" cx="8%" cy="10%" r="70%">
-      <stop offset="0" stop-color="#8491ff" stop-opacity="0.24"/>
-      <stop offset="0.55" stop-color="#ff5a2b" stop-opacity="0.07"/>
-      <stop offset="1" stop-color="#0c0b0d" stop-opacity="0"/>
+      <stop offset="0" stop-color="#8b5cff" stop-opacity="0.24"/>
+      <stop offset="0.55" stop-color="#ff6a00" stop-opacity="0.07"/>
+      <stop offset="1" stop-color="#08070c" stop-opacity="0"/>
     </radialGradient>
     <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse">
-      <circle cx="1" cy="1" r="1" fill="#f5f1e8" opacity="0.07"/>
+      <circle cx="1" cy="1" r="1" fill="#f0eee4" opacity="0.07"/>
     </pattern>
     <linearGradient id="scan" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#ff5a2b" stop-opacity="0"/>
-      <stop offset="0.5" stop-color="#ff5a2b" stop-opacity="0.65"/>
-      <stop offset="1" stop-color="#ff5a2b" stop-opacity="0"/>
+      <stop offset="0" stop-color="#ff6a00" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#ff6a00" stop-opacity="0.65"/>
+      <stop offset="1" stop-color="#ff6a00" stop-opacity="0"/>
     </linearGradient>
   </defs>
 
-  <rect width="1600" height="1000" fill="#0c0b0d"/>
+  <rect width="1600" height="1000" fill="#08070c"/>
   <rect width="1600" height="1000" fill="url(#grid)"/>
   <rect width="1600" height="1000" fill="url(#violet)"/>
 
   <g font-family="ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace">
-    <text x="120" y="98" font-size="20" fill="#756e63" letter-spacing="6">REAL-TIME OBJECT DETECTION</text>
-    <circle cx="1304" cy="91" r="6" fill="#ff5a2b"/>
-    <text x="1322" y="98" font-size="19" fill="#a49d90" letter-spacing="3">LIVE INFERENCE</text>
+    <text x="120" y="98" font-size="20" fill="#6c697c" letter-spacing="6">REAL-TIME OBJECT DETECTION</text>
+    <circle cx="1304" cy="91" r="6" fill="#ff6a00"/>
+    <text x="1322" y="98" font-size="19" fill="#9a97a8" letter-spacing="3">LIVE INFERENCE</text>
 
     <!-- camera frame -->
-    <rect x="120" y="140" width="800" height="700" rx="18" fill="#100e11" stroke="#262220"/>
-    <g stroke="#f5f1e8" stroke-opacity="0.05">
+    <rect x="120" y="140" width="800" height="700" rx="18" fill="#0b0912" stroke="#262232"/>
+    <g stroke="#f0eee4" stroke-opacity="0.05">
       <line x1="320" y1="140" x2="320" y2="840"/>
       <line x1="520" y1="140" x2="520" y2="840"/>
       <line x1="720" y1="140" x2="720" y2="840"/>
@@ -36,7 +36,7 @@
     </g>
 
     <!-- corner brackets -->
-    <g stroke="#ff5a2b" stroke-width="3" fill="none" stroke-opacity="0.85">
+    <g stroke="#ff6a00" stroke-width="3" fill="none" stroke-opacity="0.85">
       <path d="M120 220 V140 H200"/>
       <path d="M840 140 H920 V220"/>
       <path d="M920 760 V840 H840"/>
@@ -44,7 +44,7 @@
     </g>
 
     <!-- reticle -->
-    <g stroke="#f5f1e8" stroke-opacity="0.22" fill="none">
+    <g stroke="#f0eee4" stroke-opacity="0.22" fill="none">
       <circle cx="520" cy="490" r="148"/>
       <circle cx="520" cy="490" r="6"/>
       <line x1="520" y1="300" x2="520" y2="358"/>
@@ -53,38 +53,38 @@
       <line x1="652" y1="490" x2="710" y2="490"/>
     </g>
     <line x1="130" y1="490" x2="910" y2="490" stroke="url(#scan)" stroke-width="2"/>
-    <circle cx="520" cy="490" r="4" fill="#ff5a2b"/>
-    <circle cx="842" cy="708" r="3" fill="#ff5a2b"/>
+    <circle cx="520" cy="490" r="4" fill="#ff6a00"/>
+    <circle cx="842" cy="708" r="3" fill="#ff6a00"/>
 
     <!-- frame telemetry -->
-    <text x="152" y="184" font-size="18" fill="#ff8a63">● REC</text>
-    <text x="226" y="184" font-size="17" fill="#756e63">CAM 0 · 1280×720</text>
-    <text x="888" y="184" font-size="17" fill="#756e63" text-anchor="end">YOLOv8 · ONNX</text>
-    <text x="152" y="812" font-size="17" fill="#756e63">CONF 0.50</text>
-    <text x="888" y="812" font-size="17" fill="#756e63" text-anchor="end">NMS 0.40</text>
+    <text x="152" y="184" font-size="18" fill="#ffb27a">● REC</text>
+    <text x="226" y="184" font-size="17" fill="#6c697c">CAM 0 · 1280×720</text>
+    <text x="888" y="184" font-size="17" fill="#6c697c" text-anchor="end">YOLOv8 · ONNX</text>
+    <text x="152" y="812" font-size="17" fill="#6c697c">CONF 0.50</text>
+    <text x="888" y="812" font-size="17" fill="#6c697c" text-anchor="end">NMS 0.40</text>
 
     <!-- pipeline -->
-    <text x="990" y="168" font-size="17" fill="#756e63" letter-spacing="5">PIPELINE</text>
+    <text x="990" y="168" font-size="17" fill="#6c697c" letter-spacing="5">PIPELINE</text>
 
     <g>
-      <line x1="1000" y1="262" x2="1000" y2="322" stroke="#3a342e"/>
-      <line x1="1000" y1="442" x2="1000" y2="502" stroke="#3a342e"/>
+      <line x1="1000" y1="262" x2="1000" y2="322" stroke="#3f3a52"/>
+      <line x1="1000" y1="442" x2="1000" y2="502" stroke="#3f3a52"/>
 
-      <text x="990" y="228" font-size="15" fill="#ff5a2b" letter-spacing="3">01</text>
-      <text x="1040" y="232" font-size="30" fill="#f5f1e8">YOLOv4</text>
-      <text x="1040" y="264" font-size="19" fill="#a49d90">OpenCV DNN · NMS</text>
+      <text x="990" y="228" font-size="15" fill="#ff6a00" letter-spacing="3">01</text>
+      <text x="1040" y="232" font-size="30" fill="#f0eee4">YOLOv4</text>
+      <text x="1040" y="264" font-size="19" fill="#9a97a8">OpenCV DNN · NMS</text>
 
-      <text x="990" y="410" font-size="15" fill="#ff5a2b" letter-spacing="3">02</text>
-      <text x="1040" y="414" font-size="30" fill="#f5f1e8">YOLOv8</text>
-      <text x="1040" y="446" font-size="19" fill="#a49d90">Ultralytics · ONNX export</text>
+      <text x="990" y="410" font-size="15" fill="#ff6a00" letter-spacing="3">02</text>
+      <text x="1040" y="414" font-size="30" fill="#f0eee4">YOLOv8</text>
+      <text x="1040" y="446" font-size="19" fill="#9a97a8">Ultralytics · ONNX export</text>
 
-      <text x="990" y="592" font-size="15" fill="#ff5a2b" letter-spacing="3">03</text>
-      <text x="1040" y="596" font-size="30" fill="#f5f1e8">Haar cascade</text>
-      <text x="1040" y="628" font-size="19" fill="#a49d90">+ Symlet wavelets</text>
+      <text x="990" y="592" font-size="15" fill="#ff6a00" letter-spacing="3">03</text>
+      <text x="1040" y="596" font-size="30" fill="#f0eee4">Haar cascade</text>
+      <text x="1040" y="628" font-size="19" fill="#9a97a8">+ Symlet wavelets</text>
     </g>
 
-    <line x1="990" y1="700" x2="1470" y2="700" stroke="#262220"/>
-    <text x="990" y="744" font-size="18" fill="#a49d90">Python · OpenCV · ONNX</text>
-    <text x="1470" y="862" font-size="16" fill="#756e63" text-anchor="end" letter-spacing="4">PYTHON · OPENCV</text>
+    <line x1="990" y1="700" x2="1470" y2="700" stroke="#262232"/>
+    <text x="990" y="744" font-size="18" fill="#9a97a8">Python · OpenCV · ONNX</text>
+    <text x="1470" y="862" font-size="16" fill="#6c697c" text-anchor="end" letter-spacing="4">PYTHON · OPENCV</text>
   </g>
 </svg>

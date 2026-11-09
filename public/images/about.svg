@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" width="900" height="1200" role="img" aria-label="Abstract render: a warm lit sphere inside orbital rings">
   <defs>
     <radialGradient id="glow" cx="50%" cy="46%" r="58%">
-      <stop offset="0%" stop-color="#ff5a2b" stop-opacity="0.55"/>
-      <stop offset="55%" stop-color="#8491ff" stop-opacity="0.16"/>
+      <stop offset="0%" stop-color="#ff6a00" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#8b5cff" stop-opacity="0.16"/>
       <stop offset="100%" stop-color="#0b0a09" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="orb" cx="36%" cy="30%" r="76%">
@@ -13,29 +13,29 @@
       <stop offset="100%" stop-color="#120d0b"/>
     </radialGradient>
     <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
-      <circle cx="1" cy="1" r="1" fill="#f5f1e8" opacity="0.09"/>
+      <circle cx="1" cy="1" r="1" fill="#f0eee4" opacity="0.09"/>
     </pattern>
     <filter id="blur" x="-30%" y="-30%" width="160%" height="160%">
       <feGaussianBlur stdDeviation="46"/>
     </filter>
     <linearGradient id="line" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ff5a2b" stop-opacity="0.8"/>
-      <stop offset="1" stop-color="#8491ff" stop-opacity="0.15"/>
+      <stop offset="0" stop-color="#ff6a00" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#8b5cff" stop-opacity="0.15"/>
     </linearGradient>
   </defs>
-  <rect width="900" height="1200" fill="#121110"/>
+  <rect width="900" height="1200" fill="#0a0910"/>
   <rect width="900" height="1200" fill="url(#dots)"/>
   <ellipse cx="450" cy="560" rx="470" ry="330" fill="url(#glow)" filter="url(#blur)"/>
-  <g fill="none" stroke="#f5f1e8" stroke-opacity="0.11">
+  <g fill="none" stroke="#f0eee4" stroke-opacity="0.11">
     <circle cx="450" cy="560" r="352"/>
     <ellipse cx="450" cy="560" rx="392" ry="150" transform="rotate(-19 450 560)"/>
     <ellipse cx="450" cy="560" rx="330" ry="126" transform="rotate(54 450 560)"/>
   </g>
   <circle cx="450" cy="560" r="170" fill="url(#orb)"/>
   <circle cx="450" cy="560" r="170" fill="none" stroke="#ffb08c" stroke-opacity="0.35"/>
-  <circle cx="716" cy="700" r="5" fill="#ff5a2b"/>
-  <circle cx="198" cy="860" r="3" fill="#8491ff"/>
+  <circle cx="716" cy="700" r="5" fill="#ff6a00"/>
+  <circle cx="198" cy="860" r="3" fill="#8b5cff"/>
   <path d="M60 946 L840 726" stroke="url(#line)" stroke-width="1.5"/>
-  <path d="M92 1010 L506 1000" stroke="#f5f1e8" stroke-opacity="0.12"/>
-  <text x="60" y="1112" fill="#f5f1e8" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="21" letter-spacing="7">JAY TAKLE — AI &amp; ML</text>
+  <path d="M92 1010 L506 1000" stroke="#f0eee4" stroke-opacity="0.12"/>
+  <text x="60" y="1112" fill="#f0eee4" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="21" letter-spacing="7">JAY TAKLE — AI &amp; ML</text>
 </svg>
