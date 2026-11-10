@@ -1,4 +1,4 @@
-import { motion, useInView, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react'
+import { motion, useInView, useMotionTemplate, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react'
 import { useRef, type ReactNode } from 'react'
 
 import { cx } from '../lib/cx'
@@ -40,14 +40,29 @@ export function Reveal({ children, delay = 0, className, y = 24 }: { children: R
   )
 }
 
-/** An image that drifts slightly slower than the page while it scrolls past. */
-export function Parallax({ src, alt, className, strength = 8 }: { src: string; alt: string; className?: string; strength?: number }) {
+/**
+ * An image that drifts slower than the page while it scrolls past. With
+ * `reveal`, it also opens like a curtain and settles from a wider crop, the
+ * way scroll-driven studio pages unveil their media.
+ */
+export function Parallax({ src, alt, className, strength = 8, reveal = false }: { src: string; alt: string; className?: string; strength?: number; reveal?: boolean }) {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], [`-${strength}%`, `${strength}%`])
+  const scale = useTransform(scrollYProgress, [0, 0.4], [1.18, 1.02])
+  const inset = useTransform(scrollYProgress, [0, 0.35], ['16%', '0%'])
+  const clipPath = useMotionTemplate`inset(${inset} 0% ${inset} 0%)`
   return (
     <div ref={ref} className={cx('image-frame relative', className)}>
-      <motion.img src={src} alt={alt} style={{ y }} className="absolute inset-0 size-full scale-[1.12] object-cover" loading="lazy" />
+      <motion.div style={reveal ? { clipPath } : undefined} className="absolute inset-0">
+        <motion.img
+          src={src}
+          alt={alt}
+          style={reveal ? { y, scale } : { y }}
+          className={cx('absolute inset-0 size-full object-cover', !reveal && 'scale-[1.12]')}
+          loading="lazy"
+        />
+      </motion.div>
     </div>
   )
 }

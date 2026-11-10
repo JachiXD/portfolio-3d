@@ -1,10 +1,11 @@
-import { motion } from 'motion/react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import { ArrowDown, ArrowUpRight, Code2, Cpu, Trophy } from 'lucide-react'
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useRef } from 'react'
 import { Link } from 'react-router'
 
 import { achievements, asset, projects, site, skillGroups } from '../../data/site'
 import { Lines, Parallax, Reveal } from '../components/motion'
+import { PinnedStatement } from '../components/ScrollFx'
 import { WorkCard } from '../components/WorkCard'
 import { cx } from '../lib/cx'
 
@@ -15,18 +16,29 @@ const ease = [0.22, 1, 0.36, 1] as const
 const HeroScene = lazy(() => import('../components/HeroScene').then((m) => ({ default: m.HeroScene })))
 
 export function Home() {
+  const heroRef = useRef<HTMLElement>(null)
+  const reduced = useReducedMotion()
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
+  const heroTextY = useTransform(scrollYProgress, [0, 1], [0, -70])
+  const heroTextOpacity = useTransform(scrollYProgress, [0, 0.9], [1, 0])
+  const sceneScale = useTransform(scrollYProgress, [0, 1], [1, 1.16])
+  const sceneY = useTransform(scrollYProgress, [0, 1], [0, 90])
+
   return (
     <>
       {/* Hero: Unit-01 sits behind the name, with a scrim at the bottom so the
           type stays legible as the canvas moves. */}
-      <section className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden border-b border-line md:justify-end">
+      <section ref={heroRef} className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden border-b border-line md:justify-end">
         {/* On a phone the sculpture gets its own band above the name, rather
             than sitting behind two lines of display type. */}
-        <div className="relative mt-14 h-[36svh] min-h-[240px] w-full shrink-0 md:absolute md:inset-0 md:mt-0 md:h-auto md:min-h-0">
+        <motion.div
+          style={reduced ? undefined : { scale: sceneScale, y: sceneY }}
+          className="relative mt-14 h-[36svh] min-h-[240px] w-full shrink-0 md:absolute md:inset-0 md:mt-0 md:h-auto md:min-h-0"
+        >
           <Suspense fallback={null}>
             <HeroScene />
           </Suspense>
-        </div>
+        </motion.div>
         <div aria-hidden className="pointer-events-none absolute inset-0 grid-bg opacity-30" />
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-bg/80 to-transparent" />
         <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-t from-bg via-bg/85 to-transparent md:h-[55%]" />
@@ -34,7 +46,10 @@ export function Home() {
           01
         </span>
 
-        <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-9 pt-7 sm:px-8 sm:pb-12 md:pt-32">
+        <motion.div
+          style={reduced ? undefined : { y: heroTextY, opacity: heroTextOpacity }}
+          className="relative mx-auto w-full max-w-[1400px] px-5 pb-9 pt-7 sm:px-8 sm:pb-12 md:pt-32"
+        >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -93,7 +108,7 @@ export function Home() {
               </a>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Marquee */}
@@ -119,13 +134,15 @@ export function Home() {
         </div>
       </section>
 
+      <PinnedStatement />
+
       {/* About teaser */}
       <section className="mx-auto max-w-[1400px] px-5 pt-32 sm:px-8 sm:pt-44">
         <SectionHead index="02" label="PILOT PROFILE" jp="操縦者" title="Human in the machine" aside="CLEARANCE A" />
         <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
           <Reveal>
             <div className="relative border border-line bg-surface p-2">
-              <Parallax src={asset('about.svg')} alt="Abstract render" className="aspect-[3/4] max-w-[460px]" strength={6} />
+              <Parallax src={asset('about.svg')} alt="Abstract render" className="aspect-[3/4] max-w-[460px]" strength={6} reveal />
               <span className="absolute left-4 top-4 bg-bg/80 px-2 py-1 font-mono text-[8.5px] uppercase tracking-[0.2em] text-accent">VISUAL // SUBJECT</span>
               <span className="absolute bottom-4 right-4 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">UNIT 01</span>
             </div>
