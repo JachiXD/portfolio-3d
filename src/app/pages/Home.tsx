@@ -19,18 +19,22 @@ export function Home() {
     <>
       {/* Hero: Unit-01 sits behind the name, with a scrim at the bottom so the
           type stays legible as the canvas moves. */}
-      <section className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden border-b border-line">
-        <Suspense fallback={null}>
-          <HeroScene />
-        </Suspense>
+      <section className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden border-b border-line md:justify-end">
+        {/* On a phone the sculpture gets its own band above the name, rather
+            than sitting behind two lines of display type. */}
+        <div className="relative mt-14 h-[36svh] min-h-[240px] w-full shrink-0 md:absolute md:inset-0 md:mt-0 md:h-auto md:min-h-0">
+          <Suspense fallback={null}>
+            <HeroScene />
+          </Suspense>
+        </div>
         <div aria-hidden className="pointer-events-none absolute inset-0 grid-bg opacity-30" />
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-bg/80 to-transparent" />
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-bg via-bg/85 to-transparent" />
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-t from-bg via-bg/85 to-transparent md:h-[55%]" />
         <span aria-hidden className="text-outline pointer-events-none absolute right-6 top-24 hidden font-display text-[190px] leading-none lg:block">
           01
         </span>
 
-        <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-9 pt-32 sm:px-8 sm:pb-12">
+        <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-9 pt-7 sm:px-8 sm:pb-12 md:pt-32">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -1,6 +1,6 @@
 import { Environment, Float, Lightformer, MeshDistortMaterial, Sparkles } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import * as THREE from 'three'
 
 const EMBER = '#ff6a00'
@@ -33,29 +33,42 @@ function useWebGL() {
   return supported
 }
 
+interface DragState {
+  spin: { current: number }
+  tilt: { current: number }
+  dragging: { current: boolean }
+}
+
 /**
  * The hero sculpture: a polished, slowly distorting sphere inside a wire
  * shell and two orbit rings, with a dot travelling the inner ring. The
  * environment map is built from lightformers, so there is no HDR download.
+ * Dragging (mouse or finger) spins it directly.
  */
-function Core({ reduced }: { reduced: boolean }) {
-  // The scene is authored for a wide frame; on a narrow phone the same camera
-  // would push the sculpture past the edges, so scale it to the view width.
+function Core({ reduced, spin, tilt, dragging }: { reduced: boolean } & DragState) {
+  // The canvas is a wide band on desktop and a short, narrow band on phones.
+  // Fit the sculpture to whichever frame it is actually in.
   const width = useThree((state) => state.viewport.width)
-  const scale = THREE.MathUtils.clamp(width / 4.6, 0.6, 1)
+  const height = useThree((state) => state.viewport.height)
+  const scale = THREE.MathUtils.clamp(Math.min(width / 4.6, height / 3.4), 0.55, 1)
   const group = useRef<THREE.Group>(null)
   const shell = useRef<THREE.Mesh>(null)
   const orbit = useRef<THREE.Group>(null)
   const counter = useRef<THREE.Group>(null)
 
   useFrame((state, delta) => {
-    if (reduced) return
     const d = Math.min(delta, 0.05)
     if (group.current) {
-      group.current.rotation.y += d * 0.14
-      group.current.rotation.x = THREE.MathUtils.damp(group.current.rotation.x, state.pointer.y * 0.22, 2.5, d)
-      group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, -state.pointer.x * 0.08, 2, d)
+      if (!reduced && !dragging.current) group.current.rotation.y += d * 0.14
+      // Fling from the last drag, easing out instead of stopping dead.
+      group.current.rotation.y += spin.current
+      spin.current *= 0.93
+      tilt.current *= 0.9
+      const aim = reduced ? tilt.current : state.pointer.y * 0.22 + tilt.current
+      group.current.rotation.x = THREE.MathUtils.damp(group.current.rotation.x, aim, 3, d)
+      group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, reduced ? 0 : -state.pointer.x * 0.08, 2, d)
     }
+    if (reduced) return
     if (shell.current) {
       shell.current.rotation.y -= d * 0.05
       shell.current.rotation.z += d * 0.03
@@ -126,12 +139,43 @@ function Rig({ reduced }: { reduced: boolean }) {
 export function HeroScene() {
   const reduced = usePrefersReducedMotion()
   const supported = useWebGL()
+  const spin = useRef(0)
+  const tilt = useRef(0)
+  const dragging = useRef(false)
+  const last = useRef({ x: 0, y: 0 })
+
+  function start(e: ReactPointerEvent<HTMLDivElement>) {
+    dragging.current = true
+    last.current = { x: e.clientX, y: e.clientY }
+    e.currentTarget.setPointerCapture?.(e.pointerId)
+  }
+
+  function move(e: ReactPointerEvent<HTMLDivElement>) {
+    if (!dragging.current) return
+    const dx = e.clientX - last.current.x
+    const dy = e.clientY - last.current.y
+    last.current = { x: e.clientX, y: e.clientY }
+    spin.current = THREE.MathUtils.clamp(spin.current + dx * 0.008, -0.55, 0.55)
+    tilt.current = THREE.MathUtils.clamp(tilt.current + dy * 0.003, -0.35, 0.35)
+  }
+
+  function end() {
+    dragging.current = false
+  }
 
   return (
-    <div aria-hidden className="absolute inset-0 overflow-hidden">
+    <div
+      aria-hidden
+      className="absolute inset-0 cursor-grab touch-pan-y overflow-hidden active:cursor-grabbing"
+      onPointerDown={start}
+      onPointerMove={move}
+      onPointerUp={end}
+      onPointerCancel={end}
+      onPointerLeave={end}
+    >
       {/* Warm halo under the canvas: keeps the hero alive while WebGL boots
           and holds the composition together on machines without it. */}
-      <div className="absolute left-1/2 top-[38%] size-[78vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_106_0/0.20),rgb(139_92_255/0.16)_50%,rgb(168_255_53/0.07)_70%,transparent_82%)] blur-2xl" />
+      <div className="absolute left-1/2 top-1/2 size-[72vmin] max-h-[420px] max-w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_106_0/0.20),rgb(139_92_255/0.16)_50%,rgb(168_255_53/0.07)_70%,transparent_82%)] blur-2xl" />
       {supported && (
         <Canvas
           dpr={[1, 1.8]}
@@ -149,11 +193,20 @@ export function HeroScene() {
               <Lightformer form="rect" intensity={1.4} color={COOL} position={[2, -3, 2]} scale={[3, 1, 1]} />
               <Lightformer form="rect" intensity={1.6} color="#fff4e8" position={[0, 5, -3]} scale={[8, 3, 1]} />
             </Environment>
-            <Core reduced={reduced} />
+            <Core reduced={reduced} spin={spin} tilt={tilt} dragging={dragging} />
             <Rig reduced={reduced} />
           </Suspense>
         </Canvas>
       )}
+
+      {/* The drag cue is the whole point of the band on a phone: it tells you
+          the object is interactive before you touch it. */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center">
+        <span className="inline-flex items-center gap-2 border border-line-strong bg-bg/70 px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.2em] text-muted backdrop-blur-sm">
+          <span className="text-accent-2">↔</span>
+          DRAG TO ROTATE // 3D
+        </span>
+      </div>
     </div>
   )
 }
