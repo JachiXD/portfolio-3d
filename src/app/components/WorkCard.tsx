@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring } from 'motion/react'
+import { motion, useMotionValue, useReducedMotion, useSpring } from 'motion/react'
 import { useRef, useState } from 'react'
 import { Link } from 'react-router'
 
@@ -18,13 +18,15 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
   const y = useSpring(useMotionValue(0), { stiffness: 300, damping: 30 })
   const rotateX = useSpring(useMotionValue(0), { stiffness: 140, damping: 18 })
   const rotateY = useSpring(useMotionValue(0), { stiffness: 140, damping: 18 })
+  const reduced = useReducedMotion()
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '0px 0px -8% 0px' }}
-      transition={{ duration: 0.9, delay: (index % 2) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 72, scale: 0.955, rotateX: 7, filter: 'blur(12px)' }}
+      whileInView={reduced ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1, rotateX: 0, filter: 'blur(0px)' }}
+      viewport={{ once: true, margin: '0px 0px -12% 0px' }}
+      transition={{ duration: 1.2, delay: (index % 2) * 0.12, ease: [0.16, 1, 0.3, 1] }}
+      style={{ transformPerspective: 1200 }}
       className={cx(project.size === 'large' ? 'md:col-span-2' : 'md:col-span-1')}
     >
       <motion.div style={{ rotateX, rotateY, transformPerspective: 1200 }} className="card-3d">
