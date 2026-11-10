@@ -48,7 +48,7 @@ export function Work() {
         className="relative mt-12 border border-line bg-surface p-2"
       >
         <div className="notch overflow-hidden" style={{ background: project.tint }}>
-          <Parallax src={project.cover} alt={project.title} className="aspect-[16/10] sm:aspect-[16/9]" strength={5} />
+          <Parallax src={project.cover} alt={project.title} className="aspect-[16/10] sm:aspect-[16/9]" strength={5} reveal />
         </div>
         <span className="absolute left-5 top-5 bg-bg/80 px-2 py-1 font-mono text-[8.5px] uppercase tracking-[0.2em] text-accent">● VISUAL FEED</span>
         <span className="absolute bottom-5 right-5 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">SCALE 1:1</span>

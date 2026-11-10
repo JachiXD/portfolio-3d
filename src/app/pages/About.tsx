@@ -23,7 +23,7 @@ export function About() {
       <div className="mt-14 grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-24">
         <Reveal>
           <div className="relative border border-line bg-surface p-2">
-            <Parallax src={asset('about.svg')} alt="Abstract render" className="aspect-[3/4]" strength={6} />
+            <Parallax src={asset('about.svg')} alt="Abstract render" className="aspect-[3/4]" strength={6} reveal />
             <span className="absolute left-4 top-4 bg-bg/80 px-2 py-1 font-mono text-[8.5px] uppercase tracking-[0.2em] text-accent">VISUAL // SUBJECT</span>
             <span className="absolute bottom-4 right-4 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">UNIT 01</span>
           </div>

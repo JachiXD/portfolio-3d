@@ -1,14 +1,14 @@
-import { AnimatePresence, motion } from 'motion/react'
-import { useEffect } from 'react'
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router'
-
 import { EvaChrome } from './components/EvaChrome'
 import { Footer } from './components/Footer'
 import { Nav } from './components/Nav'
 import { Preloader } from './components/Preloader'
+import { ScrollProgress } from './components/ScrollFx'
 import { About } from './pages/About'
 import { Home } from './pages/Home'
 import { Work } from './pages/Work'
+import { AnimatePresence, motion } from 'motion/react'
+import { useEffect } from 'react'
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router'
 
 function ScrollManager() {
   const { pathname, hash } = useLocation()
@@ -59,6 +59,7 @@ export function App() {
       <ScrollManager />
       <Nav />
       <EvaChrome />
+      <ScrollProgress />
       <Pages />
       <Footer />
     </BrowserRouter>
