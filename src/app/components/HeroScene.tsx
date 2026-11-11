@@ -20,6 +20,19 @@ function usePrefersReducedMotion() {
   return reduced
 }
 
+/** True on mouse/trackpad hardware, false on touch-first screens. */
+function useFinePointer() {
+  const [fine, setFine] = useState(false)
+  useEffect(() => {
+    const query = window.matchMedia('(pointer: fine)')
+    const update = () => setFine(query.matches)
+    update()
+    query.addEventListener('change', update)
+    return () => query.removeEventListener('change', update)
+  }, [])
+  return fine
+}
+
 function useWebGL() {
   const [supported, setSupported] = useState(false)
   useEffect(() => {
@@ -41,44 +54,93 @@ type PermissionCapableDeviceOrientation = typeof DeviceOrientationEvent & {
   requestPermission?: () => Promise<'granted' | 'denied'>
 }
 
+/** Screen rotation, so a landscape lean still maps onto the right axis. */
+function screenAngle() {
+  const angle = typeof screen !== 'undefined' ? screen.orientation?.angle : 0
+  return typeof angle === 'number' ? angle : 0
+}
+
+/** Shortest way round the compass, so 359° → 1° does not swing the scene. */
+function wrapDegrees(value: number) {
+  return ((((value + 180) % 360) + 360) % 360) - 180
+}
+
 /**
- * Phone tilt parallax. Android and desktop sensors can be read straight away;
- * iOS only gives access after a tap, so the hero exposes a small enable
- * control there instead of silently doing nothing.
+ * Phone tilt parallax. Works on any device with a motion sensor, no pointer
+ * sniffing: gamma is the side-to-side lean, beta the forward/back tip, and a
+ * slowly drifting compass baseline adds the yaw most people actually use when
+ * they "move the phone" around. Readings are smoothed per event so the scene
+ * glides instead of snapping. iOS only unlocks the sensor after a tap, so the
+ * hero exposes a control there rather than silently doing nothing.
  */
 function useDeviceTilt(reduced: boolean) {
   const target = useRef({ x: 0, y: 0 })
   const handler = useRef<((event: DeviceOrientationEvent) => void) | null>(null)
-  const [enabled, setEnabled] = useState(false)
+  const listening = useRef(false)
+  const seen = useRef(false)
+  const compass = useRef<number | null>(null)
+  const [active, setActive] = useState(false)
   const [needsPermission, setNeedsPermission] = useState(false)
+  const [denied, setDenied] = useState(false)
 
   const listen = useCallback(() => {
-    if (handler.current) return
-    handler.current = (event) => {
-      if (event.gamma == null || event.beta == null) return
-      // gamma is left/right, beta is front/back; upright portrait sits near 90.
-      target.current.x = THREE.MathUtils.clamp(event.gamma / 26, -1, 1)
-      target.current.y = THREE.MathUtils.clamp((event.beta - 90) / 32, -1, 1)
+    if (listening.current) return
+    listening.current = true
+    const onOrientation = (event: DeviceOrientationEvent) => {
+      const { alpha, beta, gamma } = event
+      if (beta == null || gamma == null) return
+
+      // Rotate the lean into portrait space, so landscape feels the same.
+      const rad = (screenAngle() * Math.PI) / 180
+      const cos = Math.cos(rad)
+      const sin = Math.sin(rad)
+      const roll = gamma * cos - (beta - 90) * sin
+      const pitch = gamma * sin + (beta - 90) * cos
+
+      // A slowly re-centring yaw keeps "turning" the phone meaningful, without
+      // leaving the scene parked off to one side afterwards.
+      let yaw = 0
+      if (alpha != null) {
+        if (compass.current == null) compass.current = alpha
+        const delta = wrapDegrees(alpha - compass.current)
+        compass.current += delta * 0.004
+        yaw = THREE.MathUtils.clamp(delta / 70, -0.45, 0.45)
+      }
+
+      const goalX = THREE.MathUtils.clamp(roll / 22 + yaw, -1, 1)
+      const goalY = THREE.MathUtils.clamp(pitch / 26, -1, 1)
+      // Per-event low-pass: kills sensor jitter, keeps the response immediate.
+      target.current.x += (goalX - target.current.x) * 0.22
+      target.current.y += (goalY - target.current.y) * 0.22
+
+      if (!seen.current) {
+        seen.current = true
+        setActive(true)
+      }
     }
-    window.addEventListener('deviceorientation', handler.current, true)
-    setEnabled(true)
+    handler.current = onOrientation
+    window.addEventListener('deviceorientation', onOrientation, true)
   }, [])
 
   useEffect(() => {
     if (reduced) return
-    if (!window.matchMedia('(pointer: coarse)').matches) return
     const DOE = window.DeviceOrientationEvent as PermissionCapableDeviceOrientation | undefined
     if (!DOE) return
-    if (typeof DOE.requestPermission === 'function') {
-      setNeedsPermission(true)
-      return
-    }
+    // Attach straight away: wherever events are allowed without a prompt this
+    // is all it takes. iOS stays silent until the tap below, which is why the
+    // enable control is shown until readings actually arrive.
     listen()
+    if (typeof DOE.requestPermission === 'function') setNeedsPermission(true)
   }, [listen, reduced])
 
   useEffect(
     () => () => {
       if (handler.current) window.removeEventListener('deviceorientation', handler.current, true)
+      // Reset the guard too: React remounts effects in development, and a guard
+      // left set would silently skip attaching the sensor on the second mount.
+      handler.current = null
+      listening.current = false
+      compass.current = null
     },
     [],
   )
@@ -89,13 +151,21 @@ function useDeviceTilt(reduced: boolean) {
     try {
       const result = await DOE.requestPermission()
       setNeedsPermission(false)
-      if (result === 'granted') listen()
+      if (result === 'granted') {
+        setDenied(false)
+        listen()
+      } else {
+        setDenied(true)
+      }
     } catch {
+      // Some browsers expose the API but refuse the prompt; keep listening in
+      // case events are delivered anyway rather than declaring tilt broken.
       setNeedsPermission(false)
+      listen()
     }
   }, [listen])
 
-  return { target, enabled, needsPermission, request }
+  return { target, active, needsPermission, denied, request }
 }
 
 interface DragState {
@@ -111,7 +181,7 @@ interface DragState {
  * environment map is built from lightformers, so there is no HDR download.
  * Dragging (mouse or finger) spins it, and phone tilt leans the whole rig.
  */
-function Core({ reduced, spin, tilt, dragging, device }: { reduced: boolean } & DragState) {
+function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolean; fine: boolean } & DragState) {
   // The canvas is a wide band on desktop and a short, narrow band on phones.
   // Fit the sculpture to whichever frame it is actually in.
   const width = useThree((state) => state.viewport.width)
@@ -125,9 +195,15 @@ function Core({ reduced, spin, tilt, dragging, device }: { reduced: boolean } & 
 
   useFrame((state, delta) => {
     const d = Math.min(delta, 0.05)
+    const lean = reduced ? { x: 0, y: 0 } : device.current
     if (rig.current) {
-      rig.current.rotation.x = THREE.MathUtils.damp(rig.current.rotation.x, device.current.y * 0.12, 3, d)
-      rig.current.rotation.y = THREE.MathUtils.damp(rig.current.rotation.y, device.current.x * 0.2, 3, d)
+      // The whole sculpture leans with the phone, plus a slight roll and slide
+      // so the parallax reads as depth rather than a wobble.
+      rig.current.rotation.x = THREE.MathUtils.damp(rig.current.rotation.x, lean.y * 0.16, 4, d)
+      rig.current.rotation.y = THREE.MathUtils.damp(rig.current.rotation.y, lean.x * 0.26, 4, d)
+      rig.current.rotation.z = THREE.MathUtils.damp(rig.current.rotation.z, -lean.x * 0.06, 3, d)
+      rig.current.position.x = THREE.MathUtils.damp(rig.current.position.x, -lean.x * 0.14, 4, d)
+      rig.current.position.y = THREE.MathUtils.damp(rig.current.position.y, lean.y * 0.09, 4, d)
     }
     if (group.current) {
       if (!reduced && !dragging.current) group.current.rotation.y += d * 0.14
@@ -135,9 +211,11 @@ function Core({ reduced, spin, tilt, dragging, device }: { reduced: boolean } & 
       group.current.rotation.y += spin.current
       spin.current *= 0.93
       tilt.current *= 0.9
-      const aim = reduced ? tilt.current : state.pointer.y * 0.22 + tilt.current
+      // Cursor parallax only where there is a real pointer: on a phone it would
+      // otherwise stay pinned to the last touch and fight the sensor.
+      const aim = reduced ? tilt.current : (fine ? state.pointer.y * 0.22 : 0) + tilt.current
       group.current.rotation.x = THREE.MathUtils.damp(group.current.rotation.x, aim, 3, d)
-      group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, reduced ? 0 : -state.pointer.x * 0.08, 2, d)
+      group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, reduced || !fine ? 0 : -state.pointer.x * 0.08, 2, d)
     }
     if (reduced) return
     if (shell.current) {
@@ -197,13 +275,15 @@ function Core({ reduced, spin, tilt, dragging, device }: { reduced: boolean } & 
 }
 
 /** Camera drifts toward the cursor and the phone's tilt, always facing the core. */
-function Rig({ reduced, device }: { reduced: boolean; device: DeviceTilt }) {
+function Rig({ reduced, device, fine }: { reduced: boolean; device: DeviceTilt; fine: boolean }) {
   useFrame((state, delta) => {
     const d = Math.min(delta, 0.05)
-    const x = reduced ? 0 : state.pointer.x * 0.55 + device.current.x * 0.42
-    const y = reduced ? 0 : state.pointer.y * 0.32 + device.current.y * 0.28
-    state.camera.position.x = THREE.MathUtils.damp(state.camera.position.x, x, 2, d)
-    state.camera.position.y = THREE.MathUtils.damp(state.camera.position.y, y, 2, d)
+    const pointerX = fine ? state.pointer.x : 0
+    const pointerY = fine ? state.pointer.y : 0
+    const x = reduced ? 0 : pointerX * 0.5 + device.current.x * 0.5
+    const y = reduced ? 0 : pointerY * 0.3 + device.current.y * 0.32
+    state.camera.position.x = THREE.MathUtils.damp(state.camera.position.x, x, 3, d)
+    state.camera.position.y = THREE.MathUtils.damp(state.camera.position.y, y, 3, d)
     state.camera.lookAt(0, 0.2, 0)
   })
   return null
@@ -212,13 +292,17 @@ function Rig({ reduced, device }: { reduced: boolean; device: DeviceTilt }) {
 export function HeroScene() {
   const reduced = usePrefersReducedMotion()
   const supported = useWebGL()
-  const { target: device, enabled: tiltOn, needsPermission, request } = useDeviceTilt(reduced)
+  const { target: device, active: tiltOn, needsPermission, denied, request } = useDeviceTilt(reduced)
+  const fine = useFinePointer()
   const spin = useRef(0)
   const tilt = useRef(0)
   const dragging = useRef(false)
   const last = useRef({ x: 0, y: 0 })
 
   function start(e: ReactPointerEvent<HTMLDivElement>) {
+    // A touch on the sculpture is itself a user gesture, so it can unlock the
+    // iOS sensor without the visitor hunting for the little button.
+    if (needsPermission && !tiltOn) void request()
     dragging.current = true
     last.current = { x: e.clientX, y: e.clientY }
     e.currentTarget.setPointerCapture?.(e.pointerId)
@@ -266,8 +350,8 @@ export function HeroScene() {
               <Lightformer form="rect" intensity={1.4} color={COOL} position={[2, -3, 2]} scale={[3, 1, 1]} />
               <Lightformer form="rect" intensity={1.6} color="#fff4e8" position={[0, 5, -3]} scale={[8, 3, 1]} />
             </Environment>
-            <Core reduced={reduced} spin={spin} tilt={tilt} dragging={dragging} device={device} />
-            <Rig reduced={reduced} device={device} />
+            <Core reduced={reduced} fine={fine} spin={spin} tilt={tilt} dragging={dragging} device={device} />
+            <Rig reduced={reduced} device={device} fine={fine} />
           </Suspense>
         </Canvas>
       )}
@@ -278,12 +362,21 @@ export function HeroScene() {
         {needsPermission && !tiltOn && (
           <button
             type="button"
+            // The hero drag handler captures the pointer on press, which would
+            // eat this tap and keep iOS from ever granting sensor access.
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
             onClick={request}
-            className="pointer-events-auto notch-sm inline-flex items-center gap-2 border border-accent bg-bg/85 px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.2em] text-accent backdrop-blur-sm transition-colors hover:bg-accent hover:text-black"
+            className="pointer-events-auto notch-sm inline-flex items-center gap-2 border border-accent bg-bg/85 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-accent backdrop-blur-sm transition-colors hover:bg-accent hover:text-black"
           >
             <span aria-hidden>◎</span>
             TAP TO ENABLE TILT
           </button>
+        )}
+        {denied && !tiltOn && (
+          <span className="border border-line-strong bg-bg/85 px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.2em] text-faint backdrop-blur-sm">
+            TILT BLOCKED // ALLOW MOTION IN SETTINGS
+          </span>
         )}
         <span className="inline-flex items-center gap-2 border border-line-strong bg-bg/70 px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.2em] text-muted backdrop-blur-sm">
           <span className="text-accent-2">↔</span>
