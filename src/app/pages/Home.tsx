@@ -6,6 +6,7 @@ import { Link } from 'react-router'
 import { achievements, asset, projects, site, skillGroups } from '../../data/site'
 import { Lines, Parallax, Reveal } from '../components/motion'
 import { PinnedStatement } from '../components/ScrollFx'
+import { TiltDeck } from '../components/TiltDeck'
 import { WorkCard } from '../components/WorkCard'
 import { cx } from '../lib/cx'
 
@@ -26,7 +27,7 @@ export function Home() {
 
   return (
     <>
-      {/* Hero: Unit-01 sits behind the name, with a scrim at the bottom so the
+      {/* Hero: Unit-00 sits behind the name, with a scrim at the bottom so the
           type stays legible as the canvas moves. */}
       <section ref={heroRef} className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden border-b border-line md:justify-end">
         {/* On a phone the sculpture gets its own band above the name, rather
@@ -72,7 +73,7 @@ export function Home() {
             transition={{ duration: 0.7, delay: 0.3, ease }}
             className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent"
           >
-            {site.brand} // EVA INTERFACE
+            {site.brand} // REI INTERFACE
           </motion.p>
 
           <h1 className="glitch mt-3 font-display text-[clamp(62px,13vw,198px)]">
@@ -127,11 +128,11 @@ export function Home() {
       {/* Work */}
       <section id="work" className="relative mx-auto max-w-[1400px] scroll-mt-24 px-5 pt-24 sm:px-8 sm:pt-32">
         <SectionHead index="01" label="OPERATIONS" jp="作戦" title="Selected work" aside={`${projects.length} CLASSIFIED FILES`} />
-        <div className="mt-12 grid gap-x-6 gap-y-14 md:grid-cols-2 lg:gap-x-8 lg:gap-y-20">
+        <TiltDeck className="mt-12 grid gap-x-6 gap-y-14 md:grid-cols-2 lg:gap-x-8 lg:gap-y-20">
           {projects.map((p, i) => (
             <WorkCard key={p.slug} project={p} index={i} />
           ))}
-        </div>
+        </TiltDeck>
       </section>
 
       <PinnedStatement />
@@ -144,7 +145,7 @@ export function Home() {
             <div className="relative border border-line bg-surface p-2">
               <Parallax src={asset('about.svg')} alt="Abstract render" className="aspect-[3/4] max-w-[460px]" strength={6} reveal />
               <span className="absolute left-4 top-4 bg-bg/80 px-2 py-1 font-mono text-[8.5px] uppercase tracking-[0.2em] text-accent">VISUAL // SUBJECT</span>
-              <span className="absolute bottom-4 right-4 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">UNIT 01</span>
+              <span className="absolute bottom-4 right-4 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">UNIT 00</span>
             </div>
           </Reveal>
           <div className="flex flex-col justify-center">
@@ -251,7 +252,7 @@ function Achievements() {
               className={cx(
                 'group relative flex h-full min-h-[280px] flex-col justify-between overflow-hidden border p-7 sm:p-9 md:min-h-0',
                 featured
-                  ? 'border-accent/50 bg-[radial-gradient(130%_140%_at_100%_0%,rgba(255,106,0,0.24),rgba(12,12,19,1)_62%)]'
+                  ? 'border-accent/50 bg-[radial-gradient(130%_140%_at_100%_0%,rgba(255,59,82,0.24),rgba(11,18,32,1)_62%)]'
                   : 'border-line bg-surface hover:border-accent-2/40',
               )}
             >
