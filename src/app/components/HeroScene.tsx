@@ -50,8 +50,14 @@ interface DeviceTilt {
   current: { x: number; y: number }
 }
 
+type MotionPermission = () => Promise<'granted' | 'denied'>
+
 type PermissionCapableDeviceOrientation = typeof DeviceOrientationEvent & {
-  requestPermission?: () => Promise<'granted' | 'denied'>
+  requestPermission?: MotionPermission
+}
+
+type PermissionCapableDeviceMotion = typeof DeviceMotionEvent & {
+  requestPermission?: MotionPermission
 }
 
 /** Screen rotation, so a landscape lean still maps onto the right axis. */
@@ -66,16 +72,23 @@ function wrapDegrees(value: number) {
 }
 
 /**
- * Phone tilt parallax. Works on any device with a motion sensor, no pointer
- * sniffing: gamma is the side-to-side lean, beta the forward/back tip, and a
- * slowly drifting compass baseline adds the yaw most people actually use when
- * they "move the phone" around. Readings are smoothed per event so the scene
- * glides instead of snapping. iOS only unlocks the sensor after a tap, so the
- * hero exposes a control there rather than silently doing nothing.
+ * Phone motion parallax, driven by the gyroscope.
+ *
+ * Two sensor streams feed it: `devicemotion`'s rotationRate is the gyroscope,
+ * an angular velocity, so actually moving the phone gives a quick shove with
+ * momentum; `deviceorientation` gives the absolute lean it settles at, so the
+ * sculpture still follows the angle the phone is held at. A slowly re-centring
+ * compass baseline adds yaw, so turning the phone reads as depth. Everything
+ * is smoothed on the frame clock rather than per event, which keeps fast
+ * flicks fluid instead of steppy. iOS only unlocks the sensors after a tap, so
+ * the hero exposes a control rather than silently doing nothing.
  */
-function useDeviceTilt(reduced: boolean) {
+function useDeviceTilt(reduced: boolean, sensorMode: boolean) {
   const target = useRef({ x: 0, y: 0 })
-  const handler = useRef<((event: DeviceOrientationEvent) => void) | null>(null)
+  const base = useRef({ x: 0, y: 0 })
+  const gyro = useRef({ x: 0, y: 0 })
+  const orientationHandler = useRef<((event: DeviceOrientationEvent) => void) | null>(null)
+  const motionHandler = useRef<((event: DeviceMotionEvent) => void) | null>(null)
   const listening = useRef(false)
   const seen = useRef(false)
   const compass = useRef<number | null>(null)
@@ -86,6 +99,7 @@ function useDeviceTilt(reduced: boolean) {
   const listen = useCallback(() => {
     if (listening.current) return
     listening.current = true
+
     const onOrientation = (event: DeviceOrientationEvent) => {
       const { alpha, beta, gamma } = event
       if (beta == null || gamma == null) return
@@ -107,56 +121,124 @@ function useDeviceTilt(reduced: boolean) {
         yaw = THREE.MathUtils.clamp(delta / 70, -0.45, 0.45)
       }
 
-      const goalX = THREE.MathUtils.clamp(roll / 22 + yaw, -1, 1)
-      const goalY = THREE.MathUtils.clamp(pitch / 26, -1, 1)
-      // Per-event low-pass: kills sensor jitter, keeps the response immediate.
-      target.current.x += (goalX - target.current.x) * 0.22
-      target.current.y += (goalY - target.current.y) * 0.22
+      const goalX = THREE.MathUtils.clamp(roll / 24 + yaw, -1, 1)
+      const goalY = THREE.MathUtils.clamp(pitch / 28, -1, 1)
+      base.current.x += (goalX - base.current.x) * 0.3
+      base.current.y += (goalY - base.current.y) * 0.3
 
       if (!seen.current) {
         seen.current = true
         setActive(true)
       }
     }
-    handler.current = onOrientation
+
+    const onMotion = (event: DeviceMotionEvent) => {
+      const rate = event.rotationRate
+      if (!rate || rate.beta == null || rate.gamma == null) return
+      const dt = THREE.MathUtils.clamp((event.interval || 16) / 1000, 0.001, 0.05)
+      const rad = (screenAngle() * Math.PI) / 180
+      const cos = Math.cos(rad)
+      const sin = Math.sin(rad)
+      // Angular rate around each axis, in screen space, in degrees per second.
+      const rollRate = rate.gamma * cos - rate.beta * sin
+      const pitchRate = rate.gamma * sin + rate.beta * cos
+      // Integrate the rate into a lean that decays by itself: a real movement
+      // gives a visible shove, holding still settles back to level.
+      const decay = Math.exp(-3.4 * dt)
+      gyro.current.x = THREE.MathUtils.clamp(gyro.current.x * decay + rollRate * dt, -70, 70)
+      gyro.current.y = THREE.MathUtils.clamp(gyro.current.y * decay + pitchRate * dt, -70, 70)
+
+      if (!seen.current) {
+        seen.current = true
+        setActive(true)
+      }
+    }
+
+    orientationHandler.current = onOrientation
+    motionHandler.current = onMotion
     window.addEventListener('deviceorientation', onOrientation, true)
+    window.addEventListener('devicemotion', onMotion, true)
+  }, [])
+
+  const stop = useCallback(() => {
+    if (orientationHandler.current) window.removeEventListener('deviceorientation', orientationHandler.current, true)
+    if (motionHandler.current) window.removeEventListener('devicemotion', motionHandler.current, true)
+    // Reset the guards too: React remounts effects in development, and a guard
+    // left set would silently skip attaching the sensors on the second mount.
+    orientationHandler.current = null
+    motionHandler.current = null
+    listening.current = false
+    seen.current = false
+    compass.current = null
+    base.current = { x: 0, y: 0 }
+    gyro.current = { x: 0, y: 0 }
+    target.current = { x: 0, y: 0 }
   }, [])
 
   useEffect(() => {
-    if (reduced) return
+    if (reduced || !sensorMode) return
     const DOE = window.DeviceOrientationEvent as PermissionCapableDeviceOrientation | undefined
-    if (!DOE) return
+    const DOM = window.DeviceMotionEvent as PermissionCapableDeviceMotion | undefined
+    if (!DOE && !DOM) return
     // Attach straight away: wherever events are allowed without a prompt this
     // is all it takes. iOS stays silent until the tap below, which is why the
     // enable control is shown until readings actually arrive.
     listen()
-    if (typeof DOE.requestPermission === 'function') setNeedsPermission(true)
-  }, [listen, reduced])
+    if (typeof DOE?.requestPermission === 'function' || typeof DOM?.requestPermission === 'function') {
+      setNeedsPermission(true)
+    }
+    // Detach when the input source changes (a tablet gaining a mouse, a phone
+    // turned sideways into a desktop window) so the cursor is never fighting a
+    // stale sensor reading.
+    return () => {
+      stop()
+      setNeedsPermission(false)
+      setActive(false)
+    }
+  }, [listen, reduced, sensorMode, stop])
 
-  useEffect(
-    () => () => {
-      if (handler.current) window.removeEventListener('deviceorientation', handler.current, true)
-      // Reset the guard too: React remounts effects in development, and a guard
-      // left set would silently skip attaching the sensor on the second mount.
-      handler.current = null
-      listening.current = false
-      compass.current = null
-    },
-    [],
-  )
+  // One frame-clock smoother for both streams: the gyro decays in real time, so
+  // momentum dies away even if the sensor stops reporting, and the result glides
+  // toward its goal instead of stepping once per sensor event.
+  useEffect(() => {
+    if (!active || reduced) return
+    let frame = 0
+    let previous = performance.now()
+    const tick = (now: number) => {
+      const dt = Math.min((now - previous) / 1000, 0.05)
+      previous = now
+      const decay = Math.exp(-3.4 * dt)
+      gyro.current.x *= decay
+      gyro.current.y *= decay
+      const goalX = THREE.MathUtils.clamp(base.current.x + gyro.current.x / 55, -1, 1)
+      const goalY = THREE.MathUtils.clamp(base.current.y + gyro.current.y / 55, -1, 1)
+      const k = 1 - Math.exp(-9 * dt)
+      target.current.x += (goalX - target.current.x) * k
+      target.current.y += (goalY - target.current.y) * k
+      frame = requestAnimationFrame(tick)
+    }
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [active, reduced])
 
   const request = useCallback(async () => {
     const DOE = window.DeviceOrientationEvent as PermissionCapableDeviceOrientation | undefined
-    if (typeof DOE?.requestPermission !== 'function') return
+    const DOM = window.DeviceMotionEvent as PermissionCapableDeviceMotion | undefined
+    const prompts: Promise<'granted' | 'denied'>[] = []
+    if (typeof DOE?.requestPermission === 'function') prompts.push(DOE.requestPermission())
+    if (typeof DOM?.requestPermission === 'function') prompts.push(DOM.requestPermission())
+    if (!prompts.length) {
+      listen()
+      return
+    }
     try {
-      const result = await DOE.requestPermission()
+      // iOS may answer one stream and refuse the other; either granted stream is
+      // enough to drive the scene, so do not fail the whole thing on one.
+      const results = await Promise.allSettled(prompts)
       setNeedsPermission(false)
-      if (result === 'granted') {
-        setDenied(false)
-        listen()
-      } else {
-        setDenied(true)
-      }
+      const granted = results.some((result) => result.status === 'fulfilled' && result.value === 'granted')
+      setDenied(!granted)
+      if (granted) listen()
     } catch {
       // Some browsers expose the API but refuse the prompt; keep listening in
       // case events are delivered anyway rather than declaring tilt broken.
@@ -213,9 +295,9 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
       tilt.current *= 0.9
       // Cursor parallax only where there is a real pointer: on a phone it would
       // otherwise stay pinned to the last touch and fight the sensor.
-      const aim = reduced ? tilt.current : (fine ? state.pointer.y * 0.22 : 0) + tilt.current
+      const aim = reduced ? tilt.current : (fine ? state.pointer.y * 0.26 : 0) + tilt.current
       group.current.rotation.x = THREE.MathUtils.damp(group.current.rotation.x, aim, 3, d)
-      group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, reduced || !fine ? 0 : -state.pointer.x * 0.08, 2, d)
+      group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, reduced || !fine ? 0 : -state.pointer.x * 0.1, 2, d)
     }
     if (reduced) return
     if (shell.current) {
@@ -280,8 +362,8 @@ function Rig({ reduced, device, fine }: { reduced: boolean; device: DeviceTilt; 
     const d = Math.min(delta, 0.05)
     const pointerX = fine ? state.pointer.x : 0
     const pointerY = fine ? state.pointer.y : 0
-    const x = reduced ? 0 : pointerX * 0.5 + device.current.x * 0.5
-    const y = reduced ? 0 : pointerY * 0.3 + device.current.y * 0.32
+    const x = reduced ? 0 : pointerX * 0.55 + device.current.x * 0.5
+    const y = reduced ? 0 : pointerY * 0.34 + device.current.y * 0.32
     state.camera.position.x = THREE.MathUtils.damp(state.camera.position.x, x, 3, d)
     state.camera.position.y = THREE.MathUtils.damp(state.camera.position.y, y, 3, d)
     state.camera.lookAt(0, 0.2, 0)
@@ -292,8 +374,10 @@ function Rig({ reduced, device, fine }: { reduced: boolean; device: DeviceTilt; 
 export function HeroScene() {
   const reduced = usePrefersReducedMotion()
   const supported = useWebGL()
-  const { target: device, active: tiltOn, needsPermission, denied, request } = useDeviceTilt(reduced)
   const fine = useFinePointer()
+  // Mouse or trackpad gets the cursor as its tilt source, touch screens get the
+  // gyroscope, never both, so the two input paths cannot fight each other.
+  const { target: device, active: tiltOn, needsPermission, denied, request } = useDeviceTilt(reduced, !fine)
   const spin = useRef(0)
   const tilt = useRef(0)
   const dragging = useRef(false)
@@ -359,7 +443,7 @@ export function HeroScene() {
       {/* Cues for the two ways to move the object. On iOS the tilt control is
           a real button, because the sensor needs a tap to unlock. */}
       <div className="pointer-events-none absolute inset-x-0 bottom-2 flex flex-col items-center gap-1.5">
-        {needsPermission && !tiltOn && (
+        {!fine && needsPermission && !tiltOn && (
           <button
             type="button"
             // The hero drag handler captures the pointer on press, which would
@@ -380,7 +464,7 @@ export function HeroScene() {
         )}
         <span className="inline-flex items-center gap-2 border border-line-strong bg-bg/70 px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.2em] text-muted backdrop-blur-sm">
           <span className="text-accent-2">↔</span>
-          {tiltOn ? 'DRAG OR TILT // 3D' : 'DRAG TO ROTATE // 3D'}
+          {fine ? 'DRAG OR MOVE CURSOR // 3D' : tiltOn ? 'DRAG OR TILT // 3D' : 'DRAG TO ROTATE // 3D'}
         </span>
       </div>
     </div>
