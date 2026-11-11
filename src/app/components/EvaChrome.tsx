@@ -16,7 +16,7 @@ export function EvaChrome() {
       <span className="absolute bottom-3 right-3 hidden size-4 border-b border-r border-accent/70 md:block" />
 
       <div className="absolute left-1.5 top-1/2 hidden -translate-y-1/2 -rotate-90 whitespace-nowrap font-mono text-[8.5px] uppercase tracking-[0.34em] text-faint/80 md:block">
-        PROJECT // EVA-01
+        PROJECT // EVA-00
       </div>
       <div className="absolute right-1.5 top-1/2 hidden -translate-y-1/2 rotate-90 whitespace-nowrap font-mono text-[8.5px] uppercase tracking-[0.34em] text-faint/80 md:block">
         JACHI_PORTFOLIO // 2026

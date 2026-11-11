@@ -7,18 +7,18 @@
   --font-display: 'Bricolage Grotesque Variable', 'Inter Variable', ui-sans-serif, sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
-  /* NERV terminal palette: near-black, hazard orange, acid green, Unit-01 violet. */
-  --color-bg: #06060a;
-  --color-surface: #0c0c13;
-  --color-surface-2: #12121c;
-  --color-line: #232331;
-  --color-line-strong: #3b3b50;
-  --color-fg: #f0eee4;
-  --color-muted: #9a97a8;
-  --color-faint: #6c697c;
-  --color-accent: #ff6a00;
-  --color-accent-2: #a8ff35;
-  --color-accent-3: #8b5cff;
+  /* Rei palette: cold navy blacks, plugsuit white, crimson eyes, ice-blue hair. */
+  --color-bg: #070a11;
+  --color-surface: #0b1220;
+  --color-surface-2: #101a2a;
+  --color-line: #1d2a3a;
+  --color-line-strong: #32465e;
+  --color-fg: #eef3f8;
+  --color-muted: #97a9bd;
+  --color-faint: #67788c;
+  --color-accent: #ff3b52;
+  --color-accent-2: #9fe0f5;
+  --color-accent-3: #7f9de0;
   --color-alert: #ff2d55;
 
   --radius-control: 2px;
@@ -67,7 +67,7 @@
   }
   ::selection {
     background: var(--color-accent);
-    color: #08070c;
+    color: #070a11;
   }
   img {
     user-select: none;
@@ -79,7 +79,7 @@
     background: var(--color-bg);
   }
   ::-webkit-scrollbar-thumb {
-    background: #43301f;
+    background: #24354a;
     border: 3px solid var(--color-bg);
   }
   ::-webkit-scrollbar-thumb:hover {
@@ -150,14 +150,14 @@
 /* MAGI-style blueprint grid. */
 @utility grid-bg {
   background-image:
-    linear-gradient(rgb(168 255 53 / 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(168 255 53 / 0.045) 1px, transparent 1px);
+    linear-gradient(rgb(159 224 245 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(159 224 245 / 0.05) 1px, transparent 1px);
   background-size: 52px 52px;
 }
 
 @utility text-outline {
   color: transparent;
-  -webkit-text-stroke: 1px rgb(240 238 228 / 0.2);
+  -webkit-text-stroke: 1px rgb(238 243 248 / 0.2);
 }
 
 @utility jp {
@@ -167,8 +167,8 @@
 
 @utility glitch {
   text-shadow:
-    2px 0 rgb(255 45 85 / 0.35),
-    -2px 0 rgb(168 255 53 / 0.22);
+    2px 0 rgb(255 59 82 / 0.4),
+    -2px 0 rgb(159 224 245 / 0.26);
 }
 
 @utility card-3d {
