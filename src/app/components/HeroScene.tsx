@@ -3,9 +3,9 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import * as THREE from 'three'
 
-const EMBER = '#ff6a00'
-const COOL = '#a8ff35'
-const VIOLET = '#8b5cff'
+const EMBER = '#ff3b52'
+const COOL = '#9fe0f5'
+const VIOLET = '#7f9de0'
 
 /** Follows the OS setting live, so the scene stops moving when asked to. */
 function usePrefersReducedMotion() {
@@ -121,8 +121,8 @@ function useDeviceTilt(reduced: boolean, sensorMode: boolean) {
         yaw = THREE.MathUtils.clamp(delta / 70, -0.45, 0.45)
       }
 
-      const goalX = THREE.MathUtils.clamp(roll / 19 + yaw, -1, 1)
-      const goalY = THREE.MathUtils.clamp(pitch / 22, -1, 1)
+      const goalX = THREE.MathUtils.clamp(roll / 21 + yaw, -1, 1)
+      const goalY = THREE.MathUtils.clamp(pitch / 25, -1, 1)
       base.current.x += (goalX - base.current.x) * 0.3
       base.current.y += (goalY - base.current.y) * 0.3
 
@@ -210,8 +210,8 @@ function useDeviceTilt(reduced: boolean, sensorMode: boolean) {
       const decay = Math.exp(-3.4 * dt)
       gyro.current.x *= decay
       gyro.current.y *= decay
-      const goalX = THREE.MathUtils.clamp(base.current.x + gyro.current.x / 42, -1, 1)
-      const goalY = THREE.MathUtils.clamp(base.current.y + gyro.current.y / 42, -1, 1)
+      const goalX = THREE.MathUtils.clamp(base.current.x + gyro.current.x / 48, -1, 1)
+      const goalY = THREE.MathUtils.clamp(base.current.y + gyro.current.y / 48, -1, 1)
       const k = 1 - Math.exp(-9 * dt)
       target.current.x += (goalX - target.current.x) * k
       target.current.y += (goalY - target.current.y) * k
@@ -293,11 +293,11 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
       // Big, readable angles plus a slide across the frame: a sphere spinning in
       // place still looks like a sphere, so the orbit rings, the wire shell and
       // the shift of the whole silhouette are what make the tilt obvious.
-      rig.current.rotation.x = THREE.MathUtils.damp(rig.current.rotation.x, lean.y * 0.34, 5, d)
-      rig.current.rotation.y = THREE.MathUtils.damp(rig.current.rotation.y, lean.x * 0.52, 5, d)
-      rig.current.rotation.z = THREE.MathUtils.damp(rig.current.rotation.z, -lean.x * 0.16, 4, d)
-      rig.current.position.x = THREE.MathUtils.damp(rig.current.position.x, -lean.x * 0.52 * reach, 5, d)
-      rig.current.position.y = THREE.MathUtils.damp(rig.current.position.y, lean.y * 0.3 * reach, 5, d)
+      rig.current.rotation.x = THREE.MathUtils.damp(rig.current.rotation.x, lean.y * 0.25, 5, d)
+      rig.current.rotation.y = THREE.MathUtils.damp(rig.current.rotation.y, lean.x * 0.38, 5, d)
+      rig.current.rotation.z = THREE.MathUtils.damp(rig.current.rotation.z, -lean.x * 0.11, 4, d)
+      rig.current.position.x = THREE.MathUtils.damp(rig.current.position.x, -lean.x * 0.34 * reach, 5, d)
+      rig.current.position.y = THREE.MathUtils.damp(rig.current.position.y, lean.y * 0.2 * reach, 5, d)
     }
     if (group.current) {
       if (!reduced && !dragging.current) group.current.rotation.y += d * 0.14
@@ -327,7 +327,7 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
           <mesh>
             <sphereGeometry args={[1.26, 128, 128]} />
             <MeshDistortMaterial
-              color="#1b1227"
+              color="#141c2b"
               metalness={1}
               roughness={0.14}
               distort={0.34}
@@ -350,7 +350,7 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
             </mesh>
             <mesh position={[2.02, 0, 0]}>
               <sphereGeometry args={[0.048, 16, 16]} />
-              <meshBasicMaterial color="#e6ffd0" />
+              <meshBasicMaterial color="#eaf6ff" />
             </mesh>
           </group>
 
@@ -361,7 +361,7 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
             </mesh>
           </group>
 
-          <Sparkles count={64} scale={[7, 5.5, 5]} size={2.4} speed={reduced ? 0 : 0.3} color="#ffe9d6" opacity={0.5} />
+          <Sparkles count={64} scale={[7, 5.5, 5]} size={2.4} speed={reduced ? 0 : 0.3} color="#e7f1ff" opacity={0.5} />
         </group>
       </group>
     </Float>
@@ -376,14 +376,14 @@ function Rig({ reduced, device, fine }: { reduced: boolean; device: DeviceTilt; 
     const reach = THREE.MathUtils.clamp(width / 6.4, 0.45, 1)
     const pointerX = fine ? state.pointer.x : 0
     const pointerY = fine ? state.pointer.y : 0
-    const x = reduced ? 0 : pointerX * 0.55 + device.current.x * 0.9 * reach
-    const y = reduced ? 0 : pointerY * 0.34 + device.current.y * 0.55 * reach
+    const x = reduced ? 0 : pointerX * 0.55 + device.current.x * 0.7 * reach
+    const y = reduced ? 0 : pointerY * 0.34 + device.current.y * 0.43 * reach
     state.camera.position.x = THREE.MathUtils.damp(state.camera.position.x, x, 3.2, d)
     state.camera.position.y = THREE.MathUtils.damp(state.camera.position.y, y, 3.2, d)
     state.camera.lookAt(0, 0.18, 0)
     // Rolling the frame itself is the strongest cue that something tilted: the
     // horizon of the whole scene tips, not just the object inside it.
-    state.camera.rotation.z = reduced ? 0 : device.current.x * 0.13 + pointerX * 0.03
+    state.camera.rotation.z = reduced ? 0 : device.current.x * 0.09 + pointerX * 0.03
   })
   return null
 }
@@ -433,7 +433,7 @@ export function HeroScene() {
     >
       {/* Warm halo under the canvas: keeps the hero alive while WebGL boots
           and holds the composition together on machines without it. */}
-      <div aria-hidden className="absolute left-1/2 top-1/2 size-[72vmin] max-h-[420px] max-w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_106_0/0.20),rgb(139_92_255/0.16)_50%,rgb(168_255_53/0.07)_70%,transparent_82%)] blur-2xl" />
+      <div aria-hidden className="absolute left-1/2 top-1/2 size-[72vmin] max-h-[420px] max-w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_59_82/0.20),rgb(127_157_224/0.16)_50%,rgb(159_224_245/0.07)_70%,transparent_82%)] blur-2xl" />
       {supported && (
         <Canvas
           dpr={[1, 1.8]}
@@ -444,12 +444,12 @@ export function HeroScene() {
             <ambientLight intensity={0.4} />
             <pointLight position={[3, 2, 4]} intensity={45} distance={14} color={EMBER} />
             <pointLight position={[-4, -1.5, -3]} intensity={35} distance={16} color={COOL} />
-            <pointLight position={[0, 4, -2]} intensity={18} distance={14} color="#fff1e4" />
+            <pointLight position={[0, 4, -2]} intensity={18} distance={14} color="#eaf2ff" />
             <Environment resolution={128}>
               <Lightformer form="ring" intensity={5} color={EMBER} position={[3, 2.5, 2]} scale={4} />
               <Lightformer form="rect" intensity={2.4} color={VIOLET} position={[-4, -2, 1]} scale={[5, 2, 1]} />
               <Lightformer form="rect" intensity={1.4} color={COOL} position={[2, -3, 2]} scale={[3, 1, 1]} />
-              <Lightformer form="rect" intensity={1.6} color="#fff4e8" position={[0, 5, -3]} scale={[8, 3, 1]} />
+              <Lightformer form="rect" intensity={1.6} color="#eef5ff" position={[0, 5, -3]} scale={[8, 3, 1]} />
             </Environment>
             <Core reduced={reduced} fine={fine} spin={spin} tilt={tilt} dragging={dragging} device={device} />
             <Rig reduced={reduced} device={device} fine={fine} />
