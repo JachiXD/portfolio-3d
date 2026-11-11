@@ -121,8 +121,8 @@ function useDeviceTilt(reduced: boolean, sensorMode: boolean) {
         yaw = THREE.MathUtils.clamp(delta / 70, -0.45, 0.45)
       }
 
-      const goalX = THREE.MathUtils.clamp(roll / 24 + yaw, -1, 1)
-      const goalY = THREE.MathUtils.clamp(pitch / 28, -1, 1)
+      const goalX = THREE.MathUtils.clamp(roll / 19 + yaw, -1, 1)
+      const goalY = THREE.MathUtils.clamp(pitch / 22, -1, 1)
       base.current.x += (goalX - base.current.x) * 0.3
       base.current.y += (goalY - base.current.y) * 0.3
 
@@ -210,8 +210,8 @@ function useDeviceTilt(reduced: boolean, sensorMode: boolean) {
       const decay = Math.exp(-3.4 * dt)
       gyro.current.x *= decay
       gyro.current.y *= decay
-      const goalX = THREE.MathUtils.clamp(base.current.x + gyro.current.x / 55, -1, 1)
-      const goalY = THREE.MathUtils.clamp(base.current.y + gyro.current.y / 55, -1, 1)
+      const goalX = THREE.MathUtils.clamp(base.current.x + gyro.current.x / 42, -1, 1)
+      const goalY = THREE.MathUtils.clamp(base.current.y + gyro.current.y / 42, -1, 1)
       const k = 1 - Math.exp(-9 * dt)
       target.current.x += (goalX - target.current.x) * k
       target.current.y += (goalY - target.current.y) * k
@@ -269,6 +269,9 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
   const width = useThree((state) => state.viewport.width)
   const height = useThree((state) => state.viewport.height)
   const scale = THREE.MathUtils.clamp(Math.min(width / 4.6, height / 3.4), 0.55, 1)
+  // Travel is in world units, so a narrow phone band needs proportionally less
+  // of it to leave the sculpture sitting half off-screen.
+  const reach = THREE.MathUtils.clamp(width / 6.4, 0.45, 1)
   const rig = useRef<THREE.Group>(null)
   const group = useRef<THREE.Group>(null)
   const shell = useRef<THREE.Mesh>(null)
@@ -277,15 +280,24 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
 
   useFrame((state, delta) => {
     const d = Math.min(delta, 0.05)
-    const lean = reduced ? { x: 0, y: 0 } : device.current
+    // One lean value drives the whole assembly: the phone supplies it from the
+    // sensors, the desktop from the cursor, so both input paths actually tilt
+    // the sculpture instead of only nudging the camera.
+    const lean = reduced
+      ? { x: 0, y: 0 }
+      : {
+          x: THREE.MathUtils.clamp(device.current.x + (fine ? state.pointer.x * 0.5 : 0), -1.3, 1.3),
+          y: THREE.MathUtils.clamp(device.current.y + (fine ? state.pointer.y * 0.5 : 0), -1.3, 1.3),
+        }
     if (rig.current) {
-      // The whole sculpture leans with the phone, plus a slight roll and slide
-      // so the parallax reads as depth rather than a wobble.
-      rig.current.rotation.x = THREE.MathUtils.damp(rig.current.rotation.x, lean.y * 0.16, 4, d)
-      rig.current.rotation.y = THREE.MathUtils.damp(rig.current.rotation.y, lean.x * 0.26, 4, d)
-      rig.current.rotation.z = THREE.MathUtils.damp(rig.current.rotation.z, -lean.x * 0.06, 3, d)
-      rig.current.position.x = THREE.MathUtils.damp(rig.current.position.x, -lean.x * 0.14, 4, d)
-      rig.current.position.y = THREE.MathUtils.damp(rig.current.position.y, lean.y * 0.09, 4, d)
+      // Big, readable angles plus a slide across the frame: a sphere spinning in
+      // place still looks like a sphere, so the orbit rings, the wire shell and
+      // the shift of the whole silhouette are what make the tilt obvious.
+      rig.current.rotation.x = THREE.MathUtils.damp(rig.current.rotation.x, lean.y * 0.34, 5, d)
+      rig.current.rotation.y = THREE.MathUtils.damp(rig.current.rotation.y, lean.x * 0.52, 5, d)
+      rig.current.rotation.z = THREE.MathUtils.damp(rig.current.rotation.z, -lean.x * 0.16, 4, d)
+      rig.current.position.x = THREE.MathUtils.damp(rig.current.position.x, -lean.x * 0.52 * reach, 5, d)
+      rig.current.position.y = THREE.MathUtils.damp(rig.current.position.y, lean.y * 0.3 * reach, 5, d)
     }
     if (group.current) {
       if (!reduced && !dragging.current) group.current.rotation.y += d * 0.14
@@ -358,15 +370,20 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
 
 /** Camera drifts toward the cursor and the phone's tilt, always facing the core. */
 function Rig({ reduced, device, fine }: { reduced: boolean; device: DeviceTilt; fine: boolean }) {
+  const width = useThree((state) => state.viewport.width)
   useFrame((state, delta) => {
     const d = Math.min(delta, 0.05)
+    const reach = THREE.MathUtils.clamp(width / 6.4, 0.45, 1)
     const pointerX = fine ? state.pointer.x : 0
     const pointerY = fine ? state.pointer.y : 0
-    const x = reduced ? 0 : pointerX * 0.55 + device.current.x * 0.5
-    const y = reduced ? 0 : pointerY * 0.34 + device.current.y * 0.32
-    state.camera.position.x = THREE.MathUtils.damp(state.camera.position.x, x, 3, d)
-    state.camera.position.y = THREE.MathUtils.damp(state.camera.position.y, y, 3, d)
-    state.camera.lookAt(0, 0.2, 0)
+    const x = reduced ? 0 : pointerX * 0.55 + device.current.x * 0.9 * reach
+    const y = reduced ? 0 : pointerY * 0.34 + device.current.y * 0.55 * reach
+    state.camera.position.x = THREE.MathUtils.damp(state.camera.position.x, x, 3.2, d)
+    state.camera.position.y = THREE.MathUtils.damp(state.camera.position.y, y, 3.2, d)
+    state.camera.lookAt(0, 0.18, 0)
+    // Rolling the frame itself is the strongest cue that something tilted: the
+    // horizon of the whole scene tips, not just the object inside it.
+    state.camera.rotation.z = reduced ? 0 : device.current.x * 0.13 + pointerX * 0.03
   })
   return null
 }
