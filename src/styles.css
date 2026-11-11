@@ -95,14 +95,15 @@
   }
 }
 
-/* Display type is condensed and shouted, like the show's title cards. */
+/* Display type: narrower tracking than a title card, held back in weight so
+   headings read clinical rather than shouted. */
 @utility font-display {
   font-family: var(--font-display);
-  font-variation-settings: 'opsz' 96, 'wdth' 82;
-  font-weight: 700;
+  font-variation-settings: 'opsz' 96, 'wdth' 88;
+  font-weight: 650;
   text-transform: uppercase;
-  letter-spacing: 0.005em;
-  line-height: 0.86;
+  letter-spacing: 0.015em;
+  line-height: 0.9;
 }
 
 @utility text-balance {
@@ -137,9 +138,38 @@
   clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
 }
 
-/* NERV hazard tape. */
+/* Thin crimson markers instead of hazard tape: instrument panel, not warning. */
 @utility hazard-strip {
-  background-image: repeating-linear-gradient(-45deg, var(--color-accent) 0 9px, #08070c 9px 18px);
+  background-image: repeating-linear-gradient(90deg, var(--color-accent) 0 34px, transparent 34px 52px);
+}
+
+/* Wrapped-bandage hairlines, the quiet textile under a section. */
+@utility bandage {
+  background-image: repeating-linear-gradient(-36deg, rgb(238 243 248 / 0.09) 0 1px, transparent 1px 15px);
+}
+
+/* Oversized clinical numerals, stroked rather than filled. */
+@utility stencil {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 96, 'wdth' 66;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(238 243 248 / 0.22);
+}
+
+/* The plugsuit plate: the one white surface a screen is allowed. */
+@utility plate-white {
+  background: var(--color-fg);
+  color: var(--color-bg);
+}
+
+/* A clinical instrument label. */
+@utility tag {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
 }
 
 /* CRT scanlines, kept very faint so body text stays readable. */

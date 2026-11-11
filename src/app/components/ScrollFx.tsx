@@ -8,7 +8,7 @@ import { useRef } from 'react'
 export function ScrollProgress() {
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 24, mass: 0.3 })
-  return <motion.div aria-hidden style={{ scaleX }} className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-accent-2" />
+  return <motion.div aria-hidden style={{ scaleX }} className="fixed inset-x-0 top-0 z-[60] h-px origin-left bg-accent" />
 }
 
 /**
@@ -30,6 +30,7 @@ export function PinnedStatement() {
     <section ref={ref} aria-label="Statement" className="relative h-[180vh] border-y border-line">
       <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
         <div aria-hidden className="grid-bg absolute inset-0 opacity-20" />
+        <div aria-hidden className="bandage absolute inset-0 opacity-60" />
         <div aria-hidden className="absolute inset-x-5 top-24 h-px bg-line sm:inset-x-8" />
 
         <motion.div style={reduced ? undefined : { scale, opacity, x }} className="relative mx-auto w-full max-w-[1400px] px-5 sm:px-8">

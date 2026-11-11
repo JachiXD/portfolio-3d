@@ -7,6 +7,7 @@ export const asset = (file: string) => `${import.meta.env.BASE_URL}images/${file
 export const site = {
   name: 'Jay Takle',
   brand: 'JACHI_PORTFOLIO',
+  codename: 'REI',
   unit: 'EVA-00',
   role: 'AI & machine learning developer',
   location: 'India',
