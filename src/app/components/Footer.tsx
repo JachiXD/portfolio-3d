@@ -41,9 +41,9 @@ export function Footer() {
       <div aria-hidden className="h-2 hazard-strip opacity-80" />
       <div className="mx-auto max-w-[1400px] px-5 py-20 sm:px-8 sm:py-28">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3 font-mono text-[9px] uppercase tracking-[0.22em] text-faint">
-          <span className="text-accent">CONTACT // NERV</span>
+          <span className="text-accent">CONTACT // {site.codename} 00</span>
           <span className="jp text-[11px] tracking-[0.12em] text-muted">連絡</span>
-          <span className="text-accent-2">● CHANNEL OPEN</span>
+          <span className="text-accent-2">● CHANNEL OPEN // 00</span>
         </div>
 
         <div className="mt-12 grid gap-14 lg:grid-cols-[1.2fr_1fr] lg:gap-24">
@@ -57,7 +57,7 @@ export function Footer() {
               <Magnetic>
                 <a
                   href={`mailto:${site.email}`}
-                  className="notch-sm inline-flex h-14 items-center gap-2 bg-accent px-7 font-mono text-[10.5px] uppercase tracking-[0.14em] text-black transition-colors hover:bg-accent-2"
+                  className="notch-sm plate-white inline-flex h-14 items-center gap-2 px-7 font-mono text-[10.5px] uppercase tracking-[0.14em] transition-colors hover:bg-accent hover:text-fg"
                 >
                   {site.email}
                   <ArrowUpRight className="size-4" />

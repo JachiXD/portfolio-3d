@@ -25,7 +25,7 @@ export function About() {
           <div className="relative border border-line bg-surface p-2">
             <Parallax src={asset('about.svg')} alt="Abstract render" className="aspect-[3/4]" strength={6} reveal />
             <span className="absolute left-4 top-4 bg-bg/80 px-2 py-1 font-mono text-[8.5px] uppercase tracking-[0.2em] text-accent">VISUAL // SUBJECT</span>
-            <span className="absolute bottom-4 right-4 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">UNIT 01</span>
+            <span className="absolute bottom-4 right-4 font-mono text-[8.5px] uppercase tracking-[0.2em] text-faint">{site.codename} // 00</span>
           </div>
           <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[9px] uppercase tracking-[0.16em]">
             {site.socials.map((s) => (
@@ -83,10 +83,12 @@ export function About() {
               ['1ST', 'CBSE COMPETITION'],
               ['02', 'FEATURED PROJECTS'],
               ['12', 'TOOLS IN THE STACK'],
-            ].map(([value, label]) => (
-              <div key={label} className="border-l border-line p-4 first:border-l-0 sm:p-6">
+            ].map(([value, label], i) => (
+              <div key={label} className={i === 0 ? 'plate-white border-l border-line p-4 first:border-l-0 sm:p-6' : 'border-l border-line p-4 first:border-l-0 sm:p-6'}>
                 <p className="font-display text-[44px] leading-none sm:text-[60px]">{value}</p>
-                <p className="mt-3 font-mono text-[8px] uppercase leading-relaxed tracking-[0.16em] text-muted">{label}</p>
+                <p className={i === 0 ? 'mt-3 font-mono text-[8px] uppercase leading-relaxed tracking-[0.16em] text-bg/70' : 'mt-3 font-mono text-[8px] uppercase leading-relaxed tracking-[0.16em] text-muted'}>
+                  {label}
+                </p>
               </div>
             ))}
           </Reveal>

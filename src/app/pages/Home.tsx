@@ -43,8 +43,9 @@ export function Home() {
         <div aria-hidden className="pointer-events-none absolute inset-0 grid-bg opacity-30" />
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-bg/80 to-transparent" />
         <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-t from-bg via-bg/85 to-transparent md:h-[55%]" />
-        <span aria-hidden className="text-outline pointer-events-none absolute right-6 top-24 hidden font-display text-[190px] leading-none lg:block">
-          01
+        <div aria-hidden className="bandage pointer-events-none absolute inset-x-0 bottom-0 h-[52%] opacity-60" />
+        <span aria-hidden className="stencil pointer-events-none absolute right-6 top-24 hidden text-[190px] leading-none lg:block">
+          00
         </span>
 
         <motion.div
@@ -73,7 +74,7 @@ export function Home() {
             transition={{ duration: 0.7, delay: 0.3, ease }}
             className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent"
           >
-            {site.brand} // REI INTERFACE
+            {site.brand} // {site.codename} INTERFACE // 00
           </motion.p>
 
           <h1 className="glitch mt-3 font-display text-[clamp(62px,13vw,198px)]">
@@ -191,15 +192,18 @@ export function Home() {
 function SectionHead({ index, label, jp, title, aside }: { index: string; label: string; jp: string; title: string; aside?: string }) {
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-3 font-mono text-[9px] uppercase tracking-[0.22em] text-faint">
-        <span className="text-accent">{index}</span>
-        <span className="h-px w-8 bg-line-strong" />
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[9px] uppercase tracking-[0.24em] text-faint">
+        <span className="stencil text-[26px] leading-none">{index}</span>
+        <span className="h-px w-10 bg-accent" />
         <span>{label}</span>
         <span className="jp text-[11px] normal-case tracking-[0.12em] text-muted">{jp}</span>
+        <span className="ml-auto hidden text-accent sm:inline">
+          {site.codename} // {site.unit}
+        </span>
       </div>
       <div className="mt-4 flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b border-line pb-4">
         <Lines as="h2" className="font-display text-[42px] sm:text-[60px]" lines={[title]} />
-        {aside && <Reveal className="pb-1 font-mono text-[9px] uppercase tracking-[0.18em] text-muted">{aside}</Reveal>}
+        {aside && <Reveal className="pb-1 font-mono text-[9px] uppercase tracking-[0.2em] text-muted">{aside}</Reveal>}
       </div>
     </div>
   )
