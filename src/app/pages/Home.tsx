@@ -211,17 +211,26 @@ function CharacterChapter() {
   ]
 
   return (
-    <section ref={ref} aria-label="The Moon Fox" className="relative h-[210vh] border-b border-accent-3/15">
-      <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
+    <section ref={ref} aria-label="The Moon Fox" className="relative border-b border-accent-3/15 py-20 lg:h-[210vh] lg:py-0">
+      {/* Pinned on desktop only: on a phone the copy is taller than the screen,
+          so pinning would clip it. Below lg it simply flows. */}
+      <div className="relative flex items-center overflow-hidden lg:sticky lg:top-0 lg:h-[100svh]">
         <motion.div style={reduced ? undefined : { y: moonY }} aria-hidden className="moon-disc absolute -right-[14%] top-1/2 size-[62vmin] -translate-y-1/2 opacity-40 blur-[2px]" />
         <div aria-hidden className="absolute inset-0 bg-[radial-gradient(80%_70%_at_20%_50%,rgba(216,52,47,0.14),transparent_70%)]" />
 
-        <div className="relative mx-auto grid w-full max-w-[1400px] items-center gap-10 px-5 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
+        <div className="relative mx-auto grid w-full max-w-[1400px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
           <motion.div style={reduced ? undefined : { scale: portraitScale, x: portraitX }} className="relative">
-            <div className="relative mx-auto w-full max-w-[380px] lg:mx-0">
-              <div aria-hidden className="moon-disc absolute -inset-5 opacity-50 blur-md" />
-              <div className="relative aspect-[3/4] overflow-hidden rounded-t-[999px] border border-accent-3/30 bg-bg/60">
-                <div aria-hidden className="moon-disc absolute inset-0 opacity-50" />
+            <div className="relative mx-auto w-full max-w-[300px] sm:max-w-[340px] lg:mx-0 lg:max-w-[380px]">
+              <div aria-hidden className="moon-disc absolute -inset-4 opacity-25 blur-lg" />
+              <div className="relative aspect-[3/4] overflow-hidden rounded-t-[999px] border border-accent-3/30 bg-bg/70">
+                {/* Designed stand-in until the key art is dropped into
+                    public/media: a moon, a seal and a vignette. */}
+                <div aria-hidden className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_100%,rgba(216,52,47,0.3),transparent_62%)]" />
+                <div aria-hidden className="moon-disc absolute left-1/2 top-1/2 size-[64%] -translate-x-1/2 -translate-y-1/2 opacity-90" />
+                <span aria-hidden className="stencil absolute inset-x-0 bottom-12 text-center text-[52px] leading-none">
+                  心月狐
+                </span>
+                <span aria-hidden className="absolute inset-4 rounded-t-[999px] border border-accent-2/15" />
                 <img
                   src={BACKGROUND_STILL}
                   alt="Hsin, the Moon Fox"
