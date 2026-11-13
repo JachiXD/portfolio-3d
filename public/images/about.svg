@@ -1,41 +1,41 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" width="900" height="1200" role="img" aria-label="Abstract render: a warm lit sphere inside orbital rings">
   <defs>
     <radialGradient id="glow" cx="50%" cy="46%" r="58%">
-      <stop offset="0%" stop-color="#a47dff" stop-opacity="0.55"/>
-      <stop offset="55%" stop-color="#efc07d" stop-opacity="0.16"/>
-      <stop offset="100%" stop-color="#08070f" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#d8342f" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#e0a15c" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#0a0607" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="orb" cx="36%" cy="30%" r="76%">
-      <stop offset="0%" stop-color="#f7f2ff"/>
-      <stop offset="24%" stop-color="#c9b2ff"/>
-      <stop offset="56%" stop-color="#2c2350"/>
-      <stop offset="82%" stop-color="#171226"/>
-      <stop offset="100%" stop-color="#100d1c"/>
+      <stop offset="0%" stop-color="#fff7ec"/>
+      <stop offset="24%" stop-color="#f0c78a"/>
+      <stop offset="56%" stop-color="#3a1b1c"/>
+      <stop offset="82%" stop-color="#1e1416"/>
+      <stop offset="100%" stop-color="#150d0f"/>
     </radialGradient>
     <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
-      <circle cx="1" cy="1" r="1" fill="#f4efff" opacity="0.09"/>
+      <circle cx="1" cy="1" r="1" fill="#f8efe4" opacity="0.09"/>
     </pattern>
     <filter id="blur" x="-30%" y="-30%" width="160%" height="160%">
       <feGaussianBlur stdDeviation="46"/>
     </filter>
     <linearGradient id="line" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#a47dff" stop-opacity="0.8"/>
-      <stop offset="1" stop-color="#efc07d" stop-opacity="0.15"/>
+      <stop offset="0" stop-color="#d8342f" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#e0a15c" stop-opacity="0.15"/>
     </linearGradient>
   </defs>
-  <rect width="900" height="1200" fill="#08070f"/>
+  <rect width="900" height="1200" fill="#0a0607"/>
   <rect width="900" height="1200" fill="url(#dots)"/>
   <ellipse cx="450" cy="560" rx="470" ry="330" fill="url(#glow)" filter="url(#blur)"/>
-  <g fill="none" stroke="#f4efff" stroke-opacity="0.11">
+  <g fill="none" stroke="#f8efe4" stroke-opacity="0.11">
     <circle cx="450" cy="560" r="352"/>
     <ellipse cx="450" cy="560" rx="392" ry="150" transform="rotate(-19 450 560)"/>
-    <ellipse cx="450" cy="560" rx="330" ry="126" transform="rotate(54 450 560)"/>
+    <ellipse cx="450" cy="560" rx="330" ry="126" transform="rotate(54 450 560)" opacity="0.9"/>
   </g>
   <circle cx="450" cy="560" r="170" fill="url(#orb)"/>
-  <circle cx="450" cy="560" r="170" fill="none" stroke="#d9c8ff" stroke-opacity="0.35"/>
-  <circle cx="716" cy="700" r="5" fill="#a47dff"/>
-  <circle cx="198" cy="860" r="3" fill="#efc07d"/>
+  <circle cx="450" cy="560" r="170" fill="none" stroke="#f6d9a7" stroke-opacity="0.35"/>
+  <circle cx="716" cy="700" r="5" fill="#d8342f"/>
+  <circle cx="198" cy="860" r="3" fill="#e0a15c"/>
   <path d="M60 946 L840 726" stroke="url(#line)" stroke-width="1.5"/>
-  <path d="M92 1010 L506 1000" stroke="#f4efff" stroke-opacity="0.12"/>
-  <text x="60" y="1112" fill="#f4efff" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="21" letter-spacing="7">JAY TAKLE — AI &amp; ML</text>
+  <path d="M92 1010 L506 1000" stroke="#f8efe4" stroke-opacity="0.12"/>
+  <text x="60" y="1112" fill="#f8efe4" fill-opacity="0.55" font-family="ui-sans-serif, system-ui, sans-serif" font-size="21" letter-spacing="7">JAY TAKLE — AI &amp; ML</text>
 </svg>
