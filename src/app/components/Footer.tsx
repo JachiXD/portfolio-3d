@@ -39,7 +39,7 @@ export function Footer() {
   return (
     <footer id="contact" className="relative mt-32 overflow-hidden border-t border-accent-3/20 sm:mt-44">
       <div aria-hidden className="h-[2px] rule-tick opacity-80" />
-      <div aria-hidden className="moon-disc pointer-events-none absolute -left-[16%] top-6 size-[56vmin] opacity-25 blur-[3px]" />
+      <div aria-hidden className="moon-disc pointer-events-none absolute -left-[16%] top-6 hidden size-[56vmin] opacity-20 blur-[1px] sm:block" />
       <div aria-hidden className="ink-wash pointer-events-none absolute inset-0 opacity-60" />
 
       <div className="relative mx-auto max-w-[1400px] px-5 py-20 sm:px-8 sm:py-28">

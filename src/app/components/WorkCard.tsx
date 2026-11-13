@@ -78,7 +78,10 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
               OPEN STUDY
               <span aria-hidden>↗</span>
             </motion.span>
-            <span aria-hidden className="absolute bottom-3 right-3 font-mono text-[8px] uppercase tracking-[0.18em] text-white/45">SCALE 1:1</span>
+            {/* The drawn plates already carry their own footer line. */}
+            {!project.cover.endsWith('.svg') && (
+              <span aria-hidden className="absolute bottom-3 right-3 font-mono text-[8px] uppercase tracking-[0.18em] text-white/45">SCALE 1:1</span>
+            )}
           </div>
 
           <div className="mt-3 flex items-baseline justify-between gap-4 px-1" style={{ transform: 'translateZ(16px)' }}>
