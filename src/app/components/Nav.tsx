@@ -42,10 +42,10 @@ export function Nav() {
       to={to}
       className={cx(
         'group inline-flex items-baseline gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors',
-        active ? 'text-accent' : 'text-muted hover:text-fg',
+        active ? 'text-accent-2' : 'text-muted hover:text-fg',
       )}
     >
-      <span className={cx('text-[8px]', active ? 'text-accent-2' : 'text-faint')}>{code}</span>
+      <span className={cx('text-[9px]', active ? 'text-accent' : 'text-faint')}>{code}</span>
       {label}
     </NavLink>
   )
@@ -54,33 +54,31 @@ export function Nav() {
     <header
       className={cx(
         'fixed inset-x-0 top-0 z-40 border-b transition-[transform,background-color,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        lifted ? 'border-line bg-bg/90 backdrop-blur-xl' : 'border-transparent bg-transparent',
+        lifted ? 'border-accent-3/20 bg-bg/80 backdrop-blur-xl' : 'border-transparent bg-transparent',
         hidden && '-translate-y-full',
       )}
     >
-      <div aria-hidden className="h-px hazard-strip opacity-80" />
+      <div aria-hidden className="h-px rule-tick opacity-70" />
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-5 sm:px-8">
         <Link to="/" className="flex items-center gap-3">
-          <span className="notch-sm grid size-8 place-items-center plate-white font-display text-[18px] leading-none">J</span>
+          <span className="grid size-8 place-items-center plate-ivory font-display text-[18px] leading-none">J</span>
           <span className="leading-none">
             <span className="block font-mono text-[10.5px] font-semibold uppercase tracking-[0.16em] text-fg">{site.brand}</span>
-            <span className="mt-1.5 hidden font-mono text-[8px] uppercase tracking-[0.24em] text-faint sm:block">
-              {site.codename} // {site.unit} // PILOT
-            </span>
+            <span className="mt-1.5 hidden font-mono text-[8px] uppercase tracking-[0.24em] text-faint sm:block">{site.character} · MOON FOX</span>
           </span>
         </Link>
 
         <nav className="flex items-center gap-5">
-          {link('/#work', 'WORK', '01', workActive)}
-          {link('/about', 'ABOUT', '02', aboutActive)}
+          {link('/#work', 'WORK', '壹', workActive)}
+          {link('/about', 'ABOUT', '貳', aboutActive)}
           <a
             href={`mailto:${site.email}`}
-            className="notch-sm hidden border border-accent px-3.5 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-accent transition-colors hover:bg-accent hover:text-black sm:inline-block"
+            className="hidden border border-accent/70 px-3.5 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-accent-2 transition-colors hover:bg-accent hover:text-fg sm:inline-block"
           >
-            CONTACT // 03
+            CONTACT · 參
           </a>
           <span className="hidden items-center gap-2 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint lg:flex">
-            <span className="size-1 animate-pulse bg-accent-2" />
+            <span className="size-1 animate-pulse rounded-full bg-accent-3" />
             {site.location} {time}
           </span>
         </nav>
