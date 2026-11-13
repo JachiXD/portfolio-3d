@@ -43,7 +43,7 @@ export function Footer() {
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3 font-mono text-[9px] uppercase tracking-[0.22em] text-faint">
           <span className="text-accent">CONTACT // {site.codename} 00</span>
           <span className="jp text-[11px] tracking-[0.12em] text-muted">連絡</span>
-          <span className="text-accent-2">● CHANNEL OPEN // 00</span>
+          <span className="text-accent-2">● CHANNEL OPEN // {site.epithet}</span>
         </div>
 
         <div className="mt-12 grid gap-14 lg:grid-cols-[1.2fr_1fr] lg:gap-24">

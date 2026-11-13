@@ -3,9 +3,11 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import * as THREE from 'three'
 
-const EMBER = '#ff3b52'
-const COOL = '#9fe0f5'
-const VIOLET = '#7f9de0'
+// Hsin's Electro violet, moon silver and fox gold: the sculpture is lit like
+// a jade mechanism under moonlight, with the Eva crimson held back.
+const ELECTRO = '#a47dff'
+const MOON = '#ece4ff'
+const GOLD = '#efc07d'
 
 /** Follows the OS setting live, so the scene stops moving when asked to. */
 function usePrefersReducedMotion() {
@@ -327,7 +329,7 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
           <mesh>
             <sphereGeometry args={[1.26, 128, 128]} />
             <MeshDistortMaterial
-              color="#141c2b"
+              color="#141024"
               metalness={1}
               roughness={0.14}
               distort={0.34}
@@ -340,28 +342,28 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
 
           <mesh ref={shell}>
             <icosahedronGeometry args={[1.62, 1]} />
-            <meshBasicMaterial color={EMBER} wireframe transparent opacity={0.2} />
+            <meshBasicMaterial color={ELECTRO} wireframe transparent opacity={0.24} />
           </mesh>
 
           <group ref={orbit} rotation={[Math.PI / 2.15, 0.18, 0]}>
             <mesh>
               <torusGeometry args={[2.02, 0.008, 8, 240]} />
-              <meshBasicMaterial color={EMBER} transparent opacity={0.65} />
+              <meshBasicMaterial color={ELECTRO} transparent opacity={0.7} />
             </mesh>
             <mesh position={[2.02, 0, 0]}>
               <sphereGeometry args={[0.048, 16, 16]} />
-              <meshBasicMaterial color="#eaf6ff" />
+              <meshBasicMaterial color="#ece4ff" />
             </mesh>
           </group>
 
           <group ref={counter} rotation={[Math.PI / 1.6, -0.45, 0.55]}>
             <mesh>
               <torusGeometry args={[2.42, 0.004, 8, 240]} />
-              <meshBasicMaterial color={VIOLET} transparent opacity={0.5} />
+              <meshBasicMaterial color={GOLD} transparent opacity={0.55} />
             </mesh>
           </group>
 
-          <Sparkles count={64} scale={[7, 5.5, 5]} size={2.4} speed={reduced ? 0 : 0.3} color="#e7f1ff" opacity={0.5} />
+          <Sparkles count={64} scale={[7, 5.5, 5]} size={2.4} speed={reduced ? 0 : 0.3} color="#efe8ff" opacity={0.5} />
         </group>
       </group>
     </Float>
@@ -433,7 +435,7 @@ export function HeroScene() {
     >
       {/* Warm halo under the canvas: keeps the hero alive while WebGL boots
           and holds the composition together on machines without it. */}
-      <div aria-hidden className="absolute left-1/2 top-1/2 size-[72vmin] max-h-[420px] max-w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_59_82/0.20),rgb(127_157_224/0.16)_50%,rgb(159_224_245/0.07)_70%,transparent_82%)] blur-2xl" />
+      <div aria-hidden className="absolute left-1/2 top-1/2 size-[72vmin] max-h-[420px] max-w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(164_125_255/0.22),rgb(239_192_125/0.12)_52%,rgb(236_228_255/0.06)_72%,transparent_84%)] blur-2xl" />
       {supported && (
         <Canvas
           dpr={[1, 1.8]}
@@ -442,14 +444,14 @@ export function HeroScene() {
         >
           <Suspense fallback={null}>
             <ambientLight intensity={0.4} />
-            <pointLight position={[3, 2, 4]} intensity={45} distance={14} color={EMBER} />
-            <pointLight position={[-4, -1.5, -3]} intensity={35} distance={16} color={COOL} />
-            <pointLight position={[0, 4, -2]} intensity={18} distance={14} color="#eaf2ff" />
+            <pointLight position={[3, 2, 4]} intensity={45} distance={14} color={ELECTRO} />
+            <pointLight position={[-4, -1.5, -3]} intensity={35} distance={16} color={MOON} />
+            <pointLight position={[0, 4, -2]} intensity={18} distance={14} color="#f4eeff" />
             <Environment resolution={128}>
-              <Lightformer form="ring" intensity={5} color={EMBER} position={[3, 2.5, 2]} scale={4} />
-              <Lightformer form="rect" intensity={2.4} color={VIOLET} position={[-4, -2, 1]} scale={[5, 2, 1]} />
-              <Lightformer form="rect" intensity={1.4} color={COOL} position={[2, -3, 2]} scale={[3, 1, 1]} />
-              <Lightformer form="rect" intensity={1.6} color="#eef5ff" position={[0, 5, -3]} scale={[8, 3, 1]} />
+              <Lightformer form="ring" intensity={5} color={ELECTRO} position={[3, 2.5, 2]} scale={4} />
+              <Lightformer form="rect" intensity={2.4} color={GOLD} position={[-4, -2, 1]} scale={[5, 2, 1]} />
+              <Lightformer form="rect" intensity={1.4} color={MOON} position={[2, -3, 2]} scale={[3, 1, 1]} />
+              <Lightformer form="rect" intensity={1.6} color="#f6f1ff" position={[0, 5, -3]} scale={[8, 3, 1]} />
             </Environment>
             <Core reduced={reduced} fine={fine} spin={spin} tilt={tilt} dragging={dragging} device={device} />
             <Rig reduced={reduced} device={device} fine={fine} />

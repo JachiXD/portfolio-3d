@@ -14,7 +14,7 @@ export function EvaChrome() {
 
       <div className="absolute inset-3 hidden border border-fg/[0.06] md:block" />
       <div className="absolute inset-y-6 left-3 hidden w-px bg-accent/40 md:block" />
-      <div className="absolute inset-y-6 right-3 hidden w-px bg-accent/40 md:block" />
+      <div className="absolute inset-y-6 right-3 hidden w-px bg-accent-3/40 md:block" />
 
       <span className="absolute left-3 top-3 hidden size-4 border-l border-t border-accent/70 md:block" />
       <span className="absolute right-3 top-3 hidden size-4 border-r border-t border-accent/70 md:block" />
@@ -22,7 +22,7 @@ export function EvaChrome() {
       <span className="absolute bottom-3 right-3 hidden size-4 border-b border-r border-accent/70 md:block" />
 
       <div className="absolute left-1.5 top-1/2 hidden -translate-y-1/2 -rotate-90 whitespace-nowrap font-mono text-[8.5px] uppercase tracking-[0.34em] text-faint/80 md:block">
-        {site.codename} // 00 — CLINICAL
+        {site.codename} // {site.epithet} — MANIFOLD
       </div>
       <div className="absolute right-1.5 top-1/2 hidden -translate-y-1/2 rotate-90 whitespace-nowrap font-mono text-[8.5px] uppercase tracking-[0.34em] text-faint/80 md:block">
         JACHI_PORTFOLIO // 2026
