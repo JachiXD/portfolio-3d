@@ -1,13 +1,37 @@
 import { Environment, Float, Lightformer, MeshDistortMaterial, Sparkles } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Suspense, useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import * as THREE from 'three'
 
-// Hsin's Electro violet, moon silver and fox gold: the sculpture is lit like
-// a jade mechanism under moonlight, with the Eva crimson held back.
-const ELECTRO = '#a47dff'
-const MOON = '#ece4ff'
-const GOLD = '#efc07d'
+// Hsin's palette, from her key art: vermilion silk, moon ivory, lacquer gold
+// and a thread of jade. The sculpture is lit like a lantern under the moon.
+const CRIMSON = '#d8342f'
+const IVORY = '#f8efe4'
+const GOLD = '#e0a15c'
+const JADE = '#4f9b8e'
+
+/** A soft moon, painted once into a texture so it costs nothing per frame. */
+function useMoonTexture() {
+  return useMemo(() => {
+    const size = 512
+    const canvas = document.createElement('canvas')
+    canvas.width = size
+    canvas.height = size
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return null
+    const gradient = ctx.createRadialGradient(size * 0.42, size * 0.38, 0, size * 0.5, size * 0.5, size * 0.5)
+    gradient.addColorStop(0, 'rgba(255,248,236,1)')
+    gradient.addColorStop(0.4, 'rgba(247,227,189,0.92)')
+    gradient.addColorStop(0.62, 'rgba(230,174,104,0.42)')
+    gradient.addColorStop(0.82, 'rgba(216,52,47,0.14)')
+    gradient.addColorStop(1, 'rgba(10,6,7,0)')
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, size, size)
+    const texture = new THREE.CanvasTexture(canvas)
+    texture.colorSpace = THREE.SRGBColorSpace
+    return texture
+  }, [])
+}
 
 /** Follows the OS setting live, so the scene stops moving when asked to. */
 function usePrefersReducedMotion() {
@@ -266,6 +290,7 @@ interface DragState {
  * Dragging (mouse or finger) spins it, and phone tilt leans the whole rig.
  */
 function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolean; fine: boolean } & DragState) {
+  const moon = useMoonTexture()
   // The canvas is a wide band on desktop and a short, narrow band on phones.
   // Fit the sculpture to whichever frame it is actually in.
   const width = useThree((state) => state.viewport.width)
@@ -326,10 +351,17 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
     <Float speed={reduced ? 0 : 1.1} rotationIntensity={reduced ? 0 : 0.2} floatIntensity={reduced ? 0 : 0.5}>
       <group ref={rig}>
         <group ref={group} position={[0, 0.3, 0]} scale={scale}>
+          {moon && (
+            <mesh position={[0.55, 0.5, -2.6]} scale={5.4}>
+              <planeGeometry args={[1, 1]} />
+              <meshBasicMaterial map={moon} transparent depthWrite={false} opacity={0.9} />
+            </mesh>
+          )}
+
           <mesh>
             <sphereGeometry args={[1.26, 128, 128]} />
             <MeshDistortMaterial
-              color="#141024"
+              color="#1a1012"
               metalness={1}
               roughness={0.14}
               distort={0.34}
@@ -342,28 +374,28 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
 
           <mesh ref={shell}>
             <icosahedronGeometry args={[1.62, 1]} />
-            <meshBasicMaterial color={ELECTRO} wireframe transparent opacity={0.24} />
+            <meshBasicMaterial color={CRIMSON} wireframe transparent opacity={0.3} />
           </mesh>
 
           <group ref={orbit} rotation={[Math.PI / 2.15, 0.18, 0]}>
             <mesh>
               <torusGeometry args={[2.02, 0.008, 8, 240]} />
-              <meshBasicMaterial color={ELECTRO} transparent opacity={0.7} />
+              <meshBasicMaterial color={CRIMSON} transparent opacity={0.8} />
             </mesh>
             <mesh position={[2.02, 0, 0]}>
               <sphereGeometry args={[0.048, 16, 16]} />
-              <meshBasicMaterial color="#ece4ff" />
+              <meshBasicMaterial color={IVORY} />
             </mesh>
           </group>
 
           <group ref={counter} rotation={[Math.PI / 1.6, -0.45, 0.55]}>
             <mesh>
               <torusGeometry args={[2.42, 0.004, 8, 240]} />
-              <meshBasicMaterial color={GOLD} transparent opacity={0.55} />
+              <meshBasicMaterial color={JADE} transparent opacity={0.45} />
             </mesh>
           </group>
 
-          <Sparkles count={64} scale={[7, 5.5, 5]} size={2.4} speed={reduced ? 0 : 0.3} color="#efe8ff" opacity={0.5} />
+          <Sparkles count={64} scale={[7, 5.5, 5]} size={2.4} speed={reduced ? 0 : 0.3} color={IVORY} opacity={0.55} />
         </group>
       </group>
     </Float>
@@ -433,9 +465,9 @@ export function HeroScene() {
       onPointerCancel={end}
       onPointerLeave={end}
     >
-      {/* Warm halo under the canvas: keeps the hero alive while WebGL boots
-          and holds the composition together on machines without it. */}
-      <div aria-hidden className="absolute left-1/2 top-1/2 size-[72vmin] max-h-[420px] max-w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(164_125_255/0.22),rgb(239_192_125/0.12)_52%,rgb(236_228_255/0.06)_72%,transparent_84%)] blur-2xl" />
+      {/* The moon sits under the canvas, so the hero is already a scene while
+          WebGL boots and on machines without it. */}
+      <div aria-hidden className="moon-disc absolute left-1/2 top-1/2 size-[74vmin] max-h-[440px] max-w-[440px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 blur-2xl" />
       {supported && (
         <Canvas
           dpr={[1, 1.8]}
@@ -444,14 +476,14 @@ export function HeroScene() {
         >
           <Suspense fallback={null}>
             <ambientLight intensity={0.4} />
-            <pointLight position={[3, 2, 4]} intensity={45} distance={14} color={ELECTRO} />
-            <pointLight position={[-4, -1.5, -3]} intensity={35} distance={16} color={MOON} />
-            <pointLight position={[0, 4, -2]} intensity={18} distance={14} color="#f4eeff" />
+            <pointLight position={[3, 2, 4]} intensity={48} distance={14} color={CRIMSON} />
+            <pointLight position={[-4, -1.5, -3]} intensity={30} distance={16} color={JADE} />
+            <pointLight position={[0, 4, -2]} intensity={22} distance={14} color={GOLD} />
             <Environment resolution={128}>
-              <Lightformer form="ring" intensity={5} color={ELECTRO} position={[3, 2.5, 2]} scale={4} />
-              <Lightformer form="rect" intensity={2.4} color={GOLD} position={[-4, -2, 1]} scale={[5, 2, 1]} />
-              <Lightformer form="rect" intensity={1.4} color={MOON} position={[2, -3, 2]} scale={[3, 1, 1]} />
-              <Lightformer form="rect" intensity={1.6} color="#f6f1ff" position={[0, 5, -3]} scale={[8, 3, 1]} />
+              <Lightformer form="ring" intensity={6} color={CRIMSON} position={[3, 2.5, 2]} scale={4} />
+              <Lightformer form="rect" intensity={2.6} color={GOLD} position={[-4, -2, 1]} scale={[5, 2, 1]} />
+              <Lightformer form="rect" intensity={1.6} color={IVORY} position={[2, -3, 2]} scale={[3, 1, 1]} />
+              <Lightformer form="rect" intensity={1.2} color={JADE} position={[0, 5, -3]} scale={[8, 3, 1]} />
             </Environment>
             <Core reduced={reduced} fine={fine} spin={spin} tilt={tilt} dragging={dragging} device={device} />
             <Rig reduced={reduced} device={device} fine={fine} />
@@ -470,7 +502,7 @@ export function HeroScene() {
             onPointerDown={(e) => e.stopPropagation()}
             onPointerUp={(e) => e.stopPropagation()}
             onClick={request}
-            className="pointer-events-auto notch-sm inline-flex items-center gap-2 border border-accent bg-bg/85 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-accent backdrop-blur-sm transition-colors hover:bg-accent hover:text-black"
+            className="pointer-events-auto inline-flex items-center gap-2 border border-accent bg-bg/85 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-accent-2 backdrop-blur-sm transition-colors hover:bg-accent hover:text-fg"
           >
             <span aria-hidden>◎</span>
             TAP TO ENABLE TILT
