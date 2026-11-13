@@ -215,7 +215,7 @@ function CharacterChapter() {
       {/* Pinned on desktop only: on a phone the copy is taller than the screen,
           so pinning would clip it. Below lg it simply flows. */}
       <div className="relative flex items-center overflow-hidden lg:sticky lg:top-0 lg:h-[100svh]">
-        <motion.div style={reduced ? undefined : { y: moonY }} aria-hidden className="moon-disc absolute -right-[14%] top-1/2 size-[62vmin] -translate-y-1/2 opacity-40 blur-[2px]" />
+        <motion.div style={reduced ? undefined : { y: moonY }} aria-hidden className="moon-disc absolute -right-[14%] top-1/2 hidden size-[62vmin] -translate-y-1/2 opacity-30 blur-[2px] lg:block" />
         <div aria-hidden className="absolute inset-0 bg-[radial-gradient(80%_70%_at_20%_50%,rgba(216,52,47,0.14),transparent_70%)]" />
 
         <div className="relative mx-auto grid w-full max-w-[1400px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
@@ -226,7 +226,7 @@ function CharacterChapter() {
                 {/* Designed stand-in until the key art is dropped into
                     public/media: a moon, a seal and a vignette. */}
                 <div aria-hidden className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_100%,rgba(216,52,47,0.3),transparent_62%)]" />
-                <div aria-hidden className="moon-disc absolute left-1/2 top-1/2 size-[64%] -translate-x-1/2 -translate-y-1/2 opacity-90" />
+                <div aria-hidden className="moon-disc absolute left-1/2 top-[45%] aspect-square w-[60%] -translate-x-1/2 -translate-y-1/2 opacity-90" />
                 <span aria-hidden className="stencil absolute inset-x-0 bottom-12 text-center text-[52px] leading-none">
                   心月狐
                 </span>
