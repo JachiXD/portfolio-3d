@@ -3,10 +3,11 @@ import { ArrowDown, ArrowUpRight, Code2, Cpu, Trophy } from 'lucide-react'
 import { Suspense, lazy, useRef } from 'react'
 import { Link } from 'react-router'
 
-import { achievements, asset, projects, site, skillGroups } from '../../data/site'
+import { achievements, asset, characterSheet, projects, site, skillGroups } from '../../data/site'
 import { Lines, Parallax, Reveal } from '../components/motion'
 import { PinnedStatement } from '../components/ScrollFx'
 import { TiltDeck } from '../components/TiltDeck'
+import { BACKGROUND_STILL } from '../components/WorldBackground'
 import { WorkCard } from '../components/WorkCard'
 import { cx } from '../lib/cx'
 
@@ -27,11 +28,9 @@ export function Home() {
 
   return (
     <>
-      {/* Hero: Unit-01 sits behind the name, with a scrim at the bottom so the
-          type stays legible as the canvas moves. */}
-      <section ref={heroRef} className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden border-b border-line md:justify-end">
-        {/* On a phone the sculpture gets its own band above the name, rather
-            than sitting behind two lines of display type. */}
+      {/* Chapter 壹 — the opening shot. The sculpture keeps its own motion; the
+          copy sinks and the scene pushes in as the page starts to move. */}
+      <section ref={heroRef} className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden border-b border-accent-3/15 md:justify-end">
         <motion.div
           style={reduced ? undefined : { scale: sceneScale, y: sceneY }}
           className="relative mt-14 h-[36svh] min-h-[240px] w-full shrink-0 md:absolute md:inset-0 md:mt-0 md:h-auto md:min-h-0"
@@ -40,13 +39,11 @@ export function Home() {
             <HeroScene />
           </Suspense>
         </motion.div>
-        <div aria-hidden className="pointer-events-none absolute inset-0 grid-bg opacity-30" />
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-bg/80 to-transparent" />
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-t from-bg via-bg/85 to-transparent md:h-[55%]" />
+
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[42%] bg-gradient-to-t from-bg via-bg/70 to-transparent md:h-[55%]" />
         <div aria-hidden className="ink-wash pointer-events-none absolute inset-x-0 bottom-0 h-[62%] opacity-90" />
-        <div aria-hidden className="moon-halo pointer-events-none absolute left-1/2 top-[46%] size-[62vmin] max-h-[520px] max-w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl md:top-1/2" />
-        <span aria-hidden className="stencil fractal pointer-events-none absolute right-6 top-24 hidden text-[190px] leading-none lg:block">
-          00
+        <span aria-hidden className="stencil pointer-events-none absolute right-6 top-24 hidden text-[210px] leading-none lg:block">
+          心
         </span>
 
         <motion.div
@@ -56,15 +53,13 @@ export function Home() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mb-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-line/80 pb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-faint"
+            transition={{ duration: 0.9, delay: 0.2 }}
+            className="mb-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-accent-3/20 pb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-faint"
           >
-            <span className="text-accent-2">// FILE 000 — {site.epithet}</span>
-            <span>
-              SYNC <span className="text-fg">98.7%</span>
-            </span>
+            <span className="text-accent-2">壹 // MOONRISE</span>
+            <span className="hidden sm:inline">{site.realm}</span>
             <span className="hidden sm:inline">
-              MAGI: <span className="text-accent-2">ONLINE</span>
+              <span className="text-accent-3">●</span> SENTINEL
             </span>
             <span className="hidden md:inline">20.59N 78.96E</span>
           </motion.div>
@@ -73,12 +68,12 @@ export function Home() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease }}
-            className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent"
+            className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent-3"
           >
-            {site.brand} // {site.codename} INTERFACE // 00
+            {site.brand} // {site.epithet}
           </motion.p>
 
-          <h1 className="glitch mt-3 font-display text-[clamp(62px,13vw,198px)]">
+          <h1 className="bloom mt-3 font-display text-[clamp(62px,13vw,198px)]">
             {site.name.split(' ').map((word, i) => (
               <span key={word} className="block overflow-hidden pb-[0.06em] -mb-[0.06em]">
                 <motion.span className="block" initial={{ y: '110%' }} animate={{ y: 0 }} transition={{ duration: 1.1, delay: 0.25 + i * 0.12, ease }}>
@@ -92,7 +87,7 @@ export function Home() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.7, ease }}
-            className="mt-8 flex flex-col gap-6 border-t border-line/80 pt-6 sm:flex-row sm:items-end sm:justify-between"
+            className="mt-8 flex flex-col gap-6 border-t border-accent-3/20 pt-6 sm:flex-row sm:items-end sm:justify-between"
           >
             <div className="max-w-xl">
               <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-faint">
@@ -102,11 +97,11 @@ export function Home() {
             </div>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-3 font-mono text-[9px] uppercase tracking-[0.18em] text-faint">
               <span className="inline-flex items-center gap-2">
-                <span className={site.available ? 'size-1.5 animate-pulse bg-accent-2' : 'size-1.5 bg-faint'} />
+                <span className={site.available ? 'size-1.5 animate-pulse rounded-full bg-accent-3' : 'size-1.5 rounded-full bg-faint'} />
                 {site.available ? 'OPEN TO OPPORTUNITIES' : 'CURRENTLY BOOKED'}
               </span>
-              <a href="#work" className="group inline-flex items-center gap-2 text-fg transition-colors hover:text-accent">
-                SCROLL TO WORK
+              <a href="#work" className="group inline-flex items-center gap-2 text-fg transition-colors hover:text-accent-2">
+                ENTER THE WORK
                 <ArrowDown className="size-3.5 transition-transform duration-500 group-hover:translate-y-1" />
               </a>
             </div>
@@ -114,22 +109,26 @@ export function Home() {
         </motion.div>
       </section>
 
+      {/* Chapter 貳 — the character chapter. Scroll drives the framing, so the
+          portrait travels and settles instead of just sitting on the page. */}
+      <CharacterChapter />
+
       {/* Marquee */}
-      <div className="overflow-hidden border-b border-line bg-surface/50 py-3" aria-hidden>
+      <div className="overflow-hidden border-y border-accent-3/15 bg-surface/40 py-3 backdrop-blur-sm" aria-hidden>
         <ul className="flex w-max animate-marquee items-center gap-8 whitespace-nowrap font-mono text-[10.5px] uppercase tracking-[0.26em] text-muted">
           {[...site.marquee, ...site.marquee].map((item, i) => (
             <li key={i} className="flex items-center gap-8">
-              <span className="text-accent">◆</span>
+              <span className="text-accent">✦</span>
               {item}
-              <span className="text-faint">//</span>
+              <span className="text-accent-3/60">·</span>
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Work */}
+      {/* Chapter 肆 — the portfolio itself. */}
       <section id="work" className="relative mx-auto max-w-[1400px] scroll-mt-24 px-5 pt-24 sm:px-8 sm:pt-32">
-        <SectionHead index="01" label="OPERATIONS" jp="作戦" title="Selected work" aside={`${projects.length} CLASSIFIED FILES`} />
+        <SectionHead index="肆" label="SELECTED WORK" jp="作" title="Projects" aside={`${projects.length} STUDIES`} />
         <TiltDeck className="mt-12 grid gap-x-6 gap-y-14 md:grid-cols-2 lg:gap-x-8 lg:gap-y-20">
           {projects.map((p, i) => (
             <WorkCard key={p.slug} project={p} index={i} />
@@ -139,15 +138,15 @@ export function Home() {
 
       <PinnedStatement />
 
-      {/* About teaser */}
+      {/* Chapter 伍 — about */}
       <section className="mx-auto max-w-[1400px] px-5 pt-32 sm:px-8 sm:pt-44">
-        <SectionHead index="02" label="PILOT PROFILE" jp="操縦者" title="Human in the machine" aside="CLEARANCE A" />
+        <SectionHead index="伍" label="THE DEVELOPER" jp="人" title="Human in the machine" aside="INDIA · OPEN" />
         <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
           <Reveal>
-            <div className="relative border border-line bg-surface p-2">
+            <div className="relative border border-accent-3/20 bg-surface/50 p-2">
               <Parallax src={asset('about.svg')} alt="Abstract render" className="aspect-[3/4] max-w-[460px]" strength={6} reveal />
-              <span className="absolute left-4 top-4 bg-bg/80 px-2 py-1 font-mono text-[8.5px] uppercase tracking-[0.2em] text-accent">VISUAL // SUBJECT</span>
-              <span className="absolute bottom-4 right-4 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">UNIT 00</span>
+              <span className="absolute left-4 top-4 bg-bg/75 px-2 py-1 font-mono text-[8.5px] uppercase tracking-[0.2em] text-accent-2">STUDY · 01</span>
+              <span className="absolute bottom-4 right-4 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">心月狐</span>
             </div>
           </Reveal>
           <div className="flex flex-col justify-center">
@@ -165,9 +164,9 @@ export function Home() {
             <Reveal delay={0.3} className="mt-8">
               <Link
                 to="/about"
-                className="notch-sm inline-flex items-center gap-2 border border-line-strong px-5 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-fg transition-colors hover:border-accent hover:text-accent"
+                className="inline-flex items-center gap-2 border border-line-strong px-5 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-fg transition-colors hover:border-accent hover:text-accent-2"
               >
-                OPEN PERSONNEL FILE
+                READ THE FULL PROFILE
                 <ArrowUpRight className="size-4" />
               </Link>
             </Reveal>
@@ -175,18 +174,112 @@ export function Home() {
         </div>
       </section>
 
-      {/* Skills */}
+      {/* Chapter 陸 — skills */}
       <section className="mx-auto max-w-[1400px] px-5 pt-32 sm:px-8 sm:pt-44">
-        <SectionHead index="03" label="ARMAMENT" jp="装備" title="Skills & expertise" aside="12 SYSTEMS SYNCED" />
+        <SectionHead index="陸" label="TOOLKIT" jp="技" title="Skills & expertise" aside="12 SYSTEMS SYNCED" />
         <Skills />
       </section>
 
-      {/* Achievements */}
+      {/* Chapter 柒 — honours */}
       <section className="mx-auto max-w-[1400px] px-5 pt-32 sm:px-8 sm:pt-44">
-        <SectionHead index="04" label="COMBAT RECORD" jp="戦績" title="Achievements" aside="3 ENTRIES // VERIFIED" />
+        <SectionHead index="柒" label="RECORD" jp="績" title="Achievements" aside="3 ENTRIES · VERIFIED" />
         <Achievements />
       </section>
     </>
+  )
+}
+
+/**
+ * The character chapter. Everything is scroll-scrubbed: the portrait opens
+ * larger and settles, the moon behind it travels, the caption sheet lifts.
+ */
+function CharacterChapter() {
+  const ref = useRef<HTMLElement>(null)
+  const reduced = useReducedMotion()
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
+
+  const portraitScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.16, 1, 1.04])
+  const portraitX = useTransform(scrollYProgress, [0, 1], ['3%', '-3%'])
+  const copyY = useTransform(scrollYProgress, [0, 1], [70, -70])
+  const moonY = useTransform(scrollYProgress, [0, 1], ['14%', '-14%'])
+
+  const facts: Array<[string, string]> = [
+    ['ELEMENT', characterSheet.element],
+    ['WEAPON', characterSheet.weapon],
+    ['SIGNATURE', characterSheet.signature],
+    ['FORMS', characterSheet.forms.join(' · ')],
+  ]
+
+  return (
+    <section ref={ref} aria-label="The Moon Fox" className="relative h-[210vh] border-b border-accent-3/15">
+      <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
+        <motion.div style={reduced ? undefined : { y: moonY }} aria-hidden className="moon-disc absolute -right-[14%] top-1/2 size-[62vmin] -translate-y-1/2 opacity-40 blur-[2px]" />
+        <div aria-hidden className="absolute inset-0 bg-[radial-gradient(80%_70%_at_20%_50%,rgba(216,52,47,0.14),transparent_70%)]" />
+
+        <div className="relative mx-auto grid w-full max-w-[1400px] items-center gap-10 px-5 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
+          <motion.div style={reduced ? undefined : { scale: portraitScale, x: portraitX }} className="relative">
+            <div className="relative mx-auto w-full max-w-[380px] lg:mx-0">
+              <div aria-hidden className="moon-disc absolute -inset-5 opacity-50 blur-md" />
+              <div className="relative aspect-[3/4] overflow-hidden rounded-t-[999px] border border-accent-3/30 bg-bg/60">
+                <div aria-hidden className="moon-disc absolute inset-0 opacity-50" />
+                <img
+                  src={BACKGROUND_STILL}
+                  alt="Hsin, the Moon Fox"
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 size-full object-cover"
+                  style={{ objectPosition: 'var(--bg-pos)' }}
+                  onError={(event) => {
+                    // No upload yet: the moon behind stands in, so the frame
+                    // still reads as a deliberate composition.
+                    event.currentTarget.style.opacity = '0'
+                  }}
+                />
+                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-bg via-bg/10 to-transparent opacity-90" />
+                <span className="absolute left-5 top-7 font-mono text-[8.5px] uppercase tracking-[0.26em] text-accent-2">心月狐</span>
+                <span className="absolute bottom-5 left-5 font-mono text-[8.5px] uppercase tracking-[0.22em] text-faint">KEY ART · SENTINEL</span>
+              </div>
+              <span aria-hidden className="absolute -bottom-3 left-1/2 size-6 -translate-x-1/2 rotate-45 border border-accent-3/40 bg-bg" />
+            </div>
+          </motion.div>
+
+          <motion.div style={reduced ? undefined : { y: copyY }} className="relative">
+            <div className="flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.26em] text-faint">
+              <span className="text-accent">貳</span>
+              <span className="crescent size-2.5 text-accent-2" />
+              <span>THE MOON FOX</span>
+              <span className="jp text-[11px] normal-case tracking-[0.14em] text-muted">月華</span>
+            </div>
+
+            <h2 className="mt-5 font-display text-[clamp(52px,8vw,110px)] leading-[0.9]">
+              {characterSheet.roman}
+              <span className="ml-4 align-middle text-[0.42em] tracking-[0.2em] text-accent-2">{characterSheet.name}</span>
+            </h2>
+
+            <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.24em] text-accent-3">{characterSheet.title}</p>
+            <p className="mt-6 max-w-lg text-pretty text-[16px] leading-relaxed text-muted">{characterSheet.line}</p>
+
+            <dl className="mt-8 grid grid-cols-2 gap-x-8 gap-y-5 border-t border-accent-3/25 pt-6">
+              {facts.map(([label, value]) => (
+                <div key={label}>
+                  <dt className="font-mono text-[8px] uppercase tracking-[0.22em] text-faint">{label}</dt>
+                  <dd className="mt-1.5 text-[14px] text-fg">{value}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <p className="mt-6 max-w-lg font-mono text-[8.5px] uppercase leading-relaxed tracking-[0.18em] text-faint">
+              Visual direction only — the portfolio below is Jay&apos;s own work.
+            </p>
+
+            <div className="mt-7 flex items-center gap-3 font-mono text-[8.5px] uppercase tracking-[0.2em] text-faint">
+              <span className="h-px w-10 bg-accent-3/50" />
+              <span className="animate-pulse">↓</span> SCROLL TO CONTINUE
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -194,15 +287,13 @@ function SectionHead({ index, label, jp, title, aside }: { index: string; label:
   return (
     <div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[9px] uppercase tracking-[0.24em] text-faint">
-        <span className="stencil fractal text-[26px] leading-none">{index}</span>
-        <span aria-hidden className="crescent size-2.5 text-accent-3" />
+        <span className="stencil text-[26px] leading-none">{index}</span>
+        <span aria-hidden className="crescent size-2.5 text-accent-2" />
         <span className="h-px w-8 bg-accent" />
         <span>{label}</span>
         <span className="jp text-[11px] normal-case tracking-[0.12em] text-muted">{jp}</span>
         <span className="ml-auto flex items-center gap-3">
-          <span className="hidden text-accent sm:inline">
-            {site.codename} // {site.unit}
-          </span>
+          <span className="hidden text-accent-3 sm:inline">{site.character} · {site.realm}</span>
           <span aria-hidden className="seal size-6 text-[13px] leading-none">
             心
           </span>
@@ -221,7 +312,7 @@ function Skills() {
     <div className="mt-12 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
       {skillGroups.map((group, groupIndex) => (
         <Reveal key={group.title} delay={groupIndex * 0.05}>
-          <h3 className="border-b border-line pb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-accent-2">{group.title}</h3>
+          <h3 className="border-b border-line pb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-accent-3">{group.title}</h3>
           <ul className="mt-6 flex flex-col gap-5">
             {group.items.map((skill) => (
               <li key={skill.name}>
@@ -229,13 +320,13 @@ function Skills() {
                   <span>{skill.name}</span>
                   <span className="font-mono text-[9.5px] tabular-nums text-faint">{skill.level}%</span>
                 </div>
-                <div className="mt-2 h-[5px] w-full bg-line">
+                <div className="mt-2 h-[4px] w-full bg-line">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: `${skill.level}%` }}
                     viewport={{ once: true, margin: '0px 0px -5% 0px' }}
                     transition={{ duration: 1.1, delay: 0.1, ease }}
-                    className="h-full bg-accent"
+                    className="h-full bg-gradient-to-r from-accent to-accent-3"
                   />
                 </div>
               </li>
@@ -261,25 +352,25 @@ function Achievements() {
               whileHover={{ y: -6 }}
               transition={{ type: 'spring', stiffness: 260, damping: 24 }}
               className={cx(
-                'group relative flex h-full min-h-[280px] flex-col justify-between overflow-hidden border p-7 sm:p-9 md:min-h-0',
+                'group relative flex h-full min-h-[280px] flex-col justify-between overflow-hidden border p-7 backdrop-blur-sm sm:p-9 md:min-h-0',
                 featured
-                  ? 'border-accent/50 bg-[radial-gradient(130%_140%_at_100%_0%,rgba(164,125,255,0.26),rgba(16,13,28,1)_62%)]'
-                  : 'border-line bg-surface hover:border-accent-2/40',
+                  ? 'border-accent/40 bg-[radial-gradient(130%_140%_at_100%_0%,rgba(216,52,47,0.3),rgba(21,13,15,0.88)_62%)]'
+                  : 'panel hover:border-accent-3/50',
               )}
             >
-              <span aria-hidden className="absolute inset-x-0 top-0 h-[3px] hazard-strip opacity-80" />
+              <span aria-hidden className="absolute inset-x-0 top-0 h-[2px] rule-tick opacity-80" />
               <div className="relative flex items-center justify-between gap-4">
-                <span className={cx('grid size-12 place-items-center border', featured ? 'border-transparent bg-accent text-black' : 'border-line-strong text-accent-2')}>
+                <span className={cx('grid size-12 place-items-center border', featured ? 'border-transparent bg-accent text-fg' : 'border-accent-3/40 text-accent-2')}>
                   <Icon className="size-5" strokeWidth={1.75} />
                 </span>
                 <span className="text-right font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">
-                  {featured ? 'PRIORITY: S' : `ENTRY 0${i + 1}`} // {achievement.tag}
+                  {featured ? 'FIRST' : `ENTRY 0${i + 1}`} · {achievement.tag}
                 </span>
               </div>
 
               <span
                 aria-hidden
-                className={cx('font-display pointer-events-none absolute -bottom-8 right-3 select-none leading-none', featured ? 'text-[190px] text-accent/15' : 'text-[120px] text-fg/[0.05]')}
+                className={cx('font-display pointer-events-none absolute -bottom-8 right-3 select-none leading-none', featured ? 'text-[190px] text-accent/25' : 'text-[120px] text-fg/[0.05]')}
               >
                 {featured ? '1ST' : `0${i + 1}`}
               </span>

@@ -33,7 +33,7 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
         <Link
           ref={ref}
           to={`/work/${project.slug}`}
-          className="group relative block border border-line bg-surface p-2 transition-colors hover:border-accent/60"
+          className="group relative block border border-line bg-surface/70 p-2 backdrop-blur-sm transition-colors hover:border-accent/60"
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => {
             setHover(false)
@@ -50,35 +50,35 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
           }}
         >
           <div className="flex items-center justify-between gap-3 px-1 pb-2 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">
-            <span className="text-accent">FILE // 00{index + 1}</span>
-            <span>CLASS: {project.category}</span>
+            <span className="text-accent-2">工作 · 0{index + 1}</span>
+            <span>{project.category}</span>
           </div>
 
           <div
-            className={cx('notch relative overflow-hidden', project.size === 'large' ? 'aspect-[16/10]' : 'aspect-[4/5] md:aspect-[4/4.6]')}
+            className={cx('relative overflow-hidden border border-line/60', project.size === 'large' ? 'aspect-[16/10]' : 'aspect-[4/5] md:aspect-[4/4.6]')}
             style={{ background: project.tint, transform: 'translateZ(30px)' }}
           >
             <div className="absolute inset-0 transition-transform duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]">
               <Parallax src={project.cover} alt={project.title} className="size-full" strength={6} />
             </div>
-            <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/20" />
-            <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 border border-white/20 bg-black/50 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm">
-              <span className="size-1 bg-accent-2" />
-              {project.year ? `${project.year} // ` : ''}
+            <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/0 to-black/15" />
+            <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 border border-white/20 bg-black/45 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm">
+              <span className="size-1 rounded-full bg-accent-3" />
+              {project.year ? `${project.year} · ` : ''}
               {project.category}
             </span>
             <motion.span
               aria-hidden
               style={{ x, y }}
               className={cx(
-                'pointer-events-none absolute left-0 top-0 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-2 bg-accent px-3 py-2 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-black transition-[opacity,scale] duration-300 md:flex',
+                'pointer-events-none absolute left-0 top-0 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-2 bg-accent px-3 py-2 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-fg transition-[opacity,scale] duration-300 md:flex',
                 hover ? 'scale-100 opacity-100' : 'scale-75 opacity-0',
               )}
             >
-              OPEN FILE
+              OPEN STUDY
               <span aria-hidden>↗</span>
             </motion.span>
-            <span aria-hidden className="absolute bottom-3 right-3 font-mono text-[8px] uppercase tracking-[0.18em] text-white/50">SCALE 1:1</span>
+            <span aria-hidden className="absolute bottom-3 right-3 font-mono text-[8px] uppercase tracking-[0.18em] text-white/45">SCALE 1:1</span>
           </div>
 
           <div className="mt-3 flex items-baseline justify-between gap-4 px-1" style={{ transform: 'translateZ(16px)' }}>
