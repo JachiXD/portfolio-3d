@@ -26,17 +26,17 @@ export function Work() {
   return (
     <article className="mx-auto max-w-[1400px] px-5 pt-28 sm:px-8 sm:pt-36">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3 font-mono text-[9px] uppercase tracking-[0.22em] text-faint">
-        <Link to="/#work" className="inline-flex items-center gap-2 text-muted transition-colors hover:text-accent">
+        <Link to="/#work" className="inline-flex items-center gap-2 text-muted transition-colors hover:text-accent-2">
           <ArrowLeft className="size-3.5" />
           ALL WORK
         </Link>
-        <span className="text-accent">CASE FILE // 00{index + 1}</span>
-        <span className="text-accent-2">● DECLASSIFIED</span>
+        <span className="text-accent-2">STUDY · 0{index + 1}</span>
+        <span className="text-accent-3">● LIVE</span>
       </div>
 
       <div className="mt-8 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-        <Lines as="h1" className="font-display glitch text-[clamp(56px,10vw,150px)]" lines={[project.title]} />
-        <Reveal delay={0.2} className="max-w-md border-l border-accent-2/60 pl-4 text-pretty text-[16px] leading-relaxed text-muted lg:pb-4">
+        <Lines as="h1" className="font-display bloom text-[clamp(56px,10vw,150px)]" lines={[project.title]} />
+        <Reveal delay={0.2} className="max-w-md border-l border-accent-3/50 pl-4 text-pretty text-[16px] leading-relaxed text-muted lg:pb-4">
           {project.summary}
         </Reveal>
       </div>
@@ -45,12 +45,12 @@ export function Work() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.1, delay: 0.2, ease }}
-        className="relative mt-12 border border-line bg-surface p-2"
+        className="relative mt-12 border border-line bg-surface/60 p-2 backdrop-blur-sm"
       >
-        <div className="notch overflow-hidden" style={{ background: project.tint }}>
+        <div className="overflow-hidden" style={{ background: project.tint }}>
           <Parallax src={project.cover} alt={project.title} className="aspect-[16/10] sm:aspect-[16/9]" strength={5} reveal />
         </div>
-        <span className="absolute left-5 top-5 bg-bg/80 px-2 py-1 font-mono text-[8.5px] uppercase tracking-[0.2em] text-accent">● VISUAL FEED</span>
+        <span className="absolute left-5 top-5 bg-bg/80 px-2 py-1 font-mono text-[8.5px] uppercase tracking-[0.2em] text-accent-2">● FRAME</span>
         <span className="absolute bottom-5 right-5 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">SCALE 1:1</span>
       </motion.div>
 
@@ -65,7 +65,7 @@ export function Work() {
             ))}
             {project.link && (
               <div className="border-l border-accent pl-3">
-                <a href={project.link} className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
+                <a href={project.link} className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.16em] text-accent-2">
                   VISIT THE SITE
                   <ArrowUpRight className="size-3.5" />
                 </a>
@@ -103,10 +103,10 @@ export function Work() {
       )}
 
       <Link to={`/work/${next.slug}`} className="group mt-32 block border-t border-line">
-        <div aria-hidden className="h-[6px] hazard-strip opacity-70" />
+        <div aria-hidden className="h-[2px] rule-tick opacity-70" />
         <div className="flex items-end justify-between gap-6 pt-8">
           <div>
-            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">NEXT FILE // {nextNumber}</p>
+            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">NEXT STUDY · {nextNumber}</p>
             <h2 className="font-display mt-3 text-[clamp(44px,8vw,120px)] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-3">
               {next.title}
             </h2>

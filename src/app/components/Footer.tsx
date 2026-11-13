@@ -37,27 +37,30 @@ export function Footer() {
     'h-14 w-full border border-line-strong bg-black/30 px-4 font-mono text-[12px] uppercase tracking-[0.1em] placeholder:text-faint placeholder:uppercase placeholder:tracking-[0.14em] transition-colors focus:border-accent focus:outline-none'
 
   return (
-    <footer id="contact" className="mt-32 border-t border-line sm:mt-44">
-      <div aria-hidden className="h-2 hazard-strip opacity-80" />
-      <div className="mx-auto max-w-[1400px] px-5 py-20 sm:px-8 sm:py-28">
+    <footer id="contact" className="relative mt-32 overflow-hidden border-t border-accent-3/20 sm:mt-44">
+      <div aria-hidden className="h-[2px] rule-tick opacity-80" />
+      <div aria-hidden className="moon-disc pointer-events-none absolute -left-[16%] top-6 size-[56vmin] opacity-25 blur-[3px]" />
+      <div aria-hidden className="ink-wash pointer-events-none absolute inset-0 opacity-60" />
+
+      <div className="relative mx-auto max-w-[1400px] px-5 py-20 sm:px-8 sm:py-28">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3 font-mono text-[9px] uppercase tracking-[0.22em] text-faint">
-          <span className="text-accent">CONTACT // {site.codename} 00</span>
-          <span className="jp text-[11px] tracking-[0.12em] text-muted">連絡</span>
-          <span className="text-accent-2">● CHANNEL OPEN // {site.epithet}</span>
+          <span className="text-accent-2">捌 // CONTACT</span>
+          <span className="jp text-[11px] tracking-[0.12em] text-muted">傳書</span>
+          <span className="text-accent-3">● CHANNEL OPEN</span>
         </div>
 
         <div className="mt-12 grid gap-14 lg:grid-cols-[1.2fr_1fr] lg:gap-24">
           <div>
             <Lines
               as="h2"
-              className="font-display text-[clamp(46px,7.5vw,110px)]"
-              lines={['Let’s build', <>something that <span className="text-accent">thinks</span></>]}
+              className="font-display bloom text-[clamp(46px,7.5vw,110px)]"
+              lines={['Let’s build', <>something that <span className="text-accent-2">thinks</span></>]}
             />
             <Reveal delay={0.2} className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
               <Magnetic>
                 <a
                   href={`mailto:${site.email}`}
-                  className="notch-sm plate-white inline-flex h-14 items-center gap-2 px-7 font-mono text-[10.5px] uppercase tracking-[0.14em] transition-colors hover:bg-accent hover:text-fg"
+                  className="plate-ivory inline-flex h-14 items-center gap-2 px-7 font-mono text-[10.5px] uppercase tracking-[0.14em] transition-colors hover:bg-accent hover:text-fg"
                 >
                   {site.email}
                   <ArrowUpRight className="size-4" />
@@ -71,21 +74,21 @@ export function Footer() {
 
           <Reveal delay={0.15}>
             {state === 'done' ? (
-              <div className="flex h-full min-h-[320px] flex-col justify-center border border-accent-2/40 bg-surface p-8">
-                <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-accent-2">● TRANSMISSION RECEIVED</p>
+              <div className="panel flex h-full min-h-[320px] flex-col justify-center p-8">
+                <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-accent-2">● MESSAGE RECEIVED</p>
                 <p className="font-display mt-3 text-[38px]">Thank you</p>
                 <p className="mt-2 text-[14px] text-muted">I read everything myself and reply within two days.</p>
               </div>
             ) : (
               <form onSubmit={submit} className="flex flex-col gap-3">
-                <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">TRANSMISSION FORM // 03</p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">WRITE TO ME // 捌</p>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <input required placeholder="NAME" className={field} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                   <input required type="email" placeholder="EMAIL" className={field} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
                 </div>
                 <textarea
                   required
-                  placeholder="PROJECT BRIEF"
+                  placeholder="WHAT ARE WE BUILDING"
                   className={`${field} h-auto min-h-[140px] resize-none py-4`}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
@@ -93,9 +96,9 @@ export function Footer() {
                 <button
                   type="submit"
                   disabled={state === 'sending'}
-                  className="notch-sm inline-flex h-14 items-center justify-center gap-2 border border-accent bg-accent/10 font-mono text-[10px] uppercase tracking-[0.24em] text-accent transition-colors hover:bg-accent hover:text-black disabled:opacity-50"
+                  className="inline-flex h-14 items-center justify-center gap-2 border border-accent bg-accent/10 font-mono text-[10px] uppercase tracking-[0.24em] text-accent-2 transition-colors hover:bg-accent hover:text-fg disabled:opacity-50"
                 >
-                  TRANSMIT
+                  SEND
                   <ArrowUpRight className="size-3.5" />
                 </button>
                 {state === 'error' && <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-alert">{error}</p>}
@@ -108,18 +111,14 @@ export function Footer() {
           <ul className="flex flex-wrap gap-x-5 gap-y-2">
             {site.socials.map((s) => (
               <li key={s.label}>
-                <a href={s.href} className="text-muted transition-colors hover:text-accent">
+                <a href={s.href} className="text-muted transition-colors hover:text-accent-2">
                   {s.label}
                 </a>
               </li>
             ))}
           </ul>
-          <p className="text-faint sm:text-center">
-            {site.location} // {time}
-          </p>
-          <p className="text-faint sm:text-right">
-            © {new Date().getFullYear()} {site.name} // {site.brand}
-          </p>
+          <p className="text-faint sm:text-center">{site.location} · {time}</p>
+          <p className="text-faint sm:text-right">© {new Date().getFullYear()} {site.name} · {site.brand}</p>
         </div>
       </div>
     </footer>
