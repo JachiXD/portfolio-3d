@@ -1,3 +1,12 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/bricolage-grotesque';
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: 'Bricolage Grotesque Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
   /* Hsin palette: Electro violet, moon silver and fox gold on ink night. The
      Eva crimson is kept as the alert accent, so the old discipline is still
      in the room — just no longer running the screen. */
@@ -13,3 +22,235 @@
   --color-accent-2: #ece4ff;
   --color-accent-3: #efc07d;
   --color-alert: #ff3b52;
+
+  --radius-control: 2px;
+  --radius-card: 2px;
+  --radius-image: 2px;
+
+  --animate-marquee: marquee 44s linear infinite;
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-line);
+  }
+  html {
+    background: var(--color-bg);
+    color-scheme: dark;
+    overscroll-behavior-y: none;
+  }
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    letter-spacing: -0.005em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+  button,
+  input,
+  textarea {
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent-2);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: #08070f;
+  }
+  img {
+    user-select: none;
+  }
+  ::-webkit-scrollbar {
+    width: 11px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2a2340;
+    border: 3px solid var(--color-bg);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Display type: narrower tracking than a title card, held back in weight so
+   headings read clinical rather than shouted. */
+@utility font-display {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 96, 'wdth' 88;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.015em;
+  line-height: 0.9;
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+@utility text-pretty {
+  text-wrap: pretty;
+}
+
+/* Underline that draws in from the left on hover. */
+@utility link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  &:hover {
+    background-size: 100% 1px;
+  }
+}
+
+@utility image-frame {
+  background: var(--color-surface-2);
+  overflow: hidden;
+}
+
+/* Angled panel corners, used on covers and buttons. */
+@utility notch {
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+@utility notch-sm {
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+}
+
+/* Instrument ticks: a violet measure broken by a shorter gold one, the way a
+   measured grid runs under a mechanism diagram. */
+@utility hazard-strip {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--color-accent) 0 44px,
+    transparent 44px 48px,
+    var(--color-accent-3) 48px 68px,
+    transparent 68px 72px
+  );
+}
+
+/* Silk hairlines, the quiet textile under a section. */
+@utility bandage {
+  background-image: repeating-linear-gradient(-32deg, rgb(244 239 255 / 0.08) 0 1px, transparent 1px 18px);
+}
+
+/* Oversized numerals, stroked rather than filled. */
+@utility stencil {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 96, 'wdth' 66;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(236 228 255 / 0.22);
+}
+
+/* The moon plate: the one pale surface a screen is allowed. */
+@utility plate-white {
+  background: var(--color-accent-2);
+  color: #100d1c;
+}
+
+/* Hsin's aura: a violet-to-gold bloom that reads as light on fabric. */
+@utility moon-halo {
+  background: radial-gradient(closest-side, rgb(164 125 255 / 0.22), rgb(239 192 125 / 0.1) 55%, transparent 78%);
+}
+
+/* Ink wash, in place of a flat panel: a violet stain with a gold bloom. */
+@utility ink-wash {
+  background-image:
+    radial-gradient(60% 72% at 12% 8%, rgb(164 125 255 / 0.16), transparent 70%),
+    radial-gradient(52% 62% at 88% 92%, rgb(239 192 125 / 0.1), transparent 72%);
+}
+
+/* Fractal proliferation: one form repeated as offset echoes of itself. */
+@utility fractal {
+  text-shadow:
+    0.5px 0.5px 0 rgb(164 125 255 / 0.35),
+    1px 1px 0 rgb(164 125 255 / 0.2),
+    2.5px 2.5px 0 rgb(239 192 125 / 0.16);
+}
+
+/* A crescent, drawn with an inset shadow instead of an image. */
+@utility crescent {
+  border-radius: 9999px;
+  box-shadow: inset -0.34em -0.06em 0 0 currentColor;
+}
+
+/* An Eastern seal: a small gold-framed stamp beside a label. */
+@utility seal {
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgb(239 192 125 / 0.55);
+  background: rgb(239 192 125 / 0.07);
+  color: var(--color-accent-3);
+  font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
+}
+
+/* A clinical instrument label. */
+@utility tag {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+/* CRT scanlines, kept very faint so body text stays readable. */
+@utility scanlines {
+  background-image: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.34) 0 1px, transparent 1px 3px);
+}
+
+/* MAGI-style blueprint grid. */
+@utility grid-bg {
+  background-image:
+    linear-gradient(rgb(164 125 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(164 125 255 / 0.06) 1px, transparent 1px);
+  background-size: 52px 52px;
+}
+
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(238 243 248 / 0.2);
+}
+
+@utility jp {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
+  letter-spacing: 0.08em;
+}
+
+@utility glitch {
+  text-shadow:
+    2px 0 rgb(164 125 255 / 0.42),
+    -2px 0 rgb(239 192 125 / 0.22);
+}
+
+@utility card-3d {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+@utility layer-lift {
+  transform: translateZ(46px);
+}
