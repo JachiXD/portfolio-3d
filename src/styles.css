@@ -7,21 +7,21 @@
   --font-display: 'Bricolage Grotesque Variable', 'Inter Variable', ui-sans-serif, sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
-  /* Hsin palette: Electro violet, moon silver and fox gold on ink night. The
-     Eva crimson is kept as the alert accent, so the old discipline is still
-     in the room — just no longer running the screen. */
-  --color-bg: #08070f;
-  --color-surface: #100d1c;
-  --color-surface-2: #171226;
-  --color-line: #262038;
-  --color-line-strong: #403658;
-  --color-fg: #f4efff;
-  --color-muted: #a9a0c6;
-  --color-faint: #746a92;
-  --color-accent: #a47dff;
-  --color-accent-2: #ece4ff;
-  --color-accent-3: #efc07d;
-  --color-alert: #ff3b52;
+  /* Hsin: ink night, vermilion silk, moon ivory, lacquer gold, a thread of
+     jade from her gown. Warm darks, no cold machinery. */
+  --color-bg: #0a0607;
+  --color-surface: #150d0f;
+  --color-surface-2: #1e1416;
+  --color-line: #32211f;
+  --color-line-strong: #4d3330;
+  --color-fg: #f8efe4;
+  --color-muted: #cdb9ad;
+  --color-faint: #96786c;
+  --color-accent: #d8342f;
+  --color-accent-2: #f6d9a7;
+  --color-accent-3: #e0a15c;
+  --color-jade: #4f9b8e;
+  --color-alert: #ff5a4d;
 
   --radius-control: 2px;
   --radius-card: 2px;
@@ -31,6 +31,18 @@
   @keyframes marquee {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
+  }
+}
+
+/* Where the artwork sits inside its cover crop. Tuned so Hsin stays in frame;
+   override here (or with an inline style) without touching the component. */
+:root {
+  --bg-pos: 52% 36%;
+  --bg-overlay: 0.62;
+}
+@media (max-width: 767px) {
+  :root {
+    --bg-pos: 52% 26%;
   }
 }
 
@@ -69,7 +81,7 @@
   }
   ::selection {
     background: var(--color-accent);
-    color: #08070f;
+    color: #0a0607;
   }
   img {
     user-select: none;
@@ -81,31 +93,32 @@
     background: var(--color-bg);
   }
   ::-webkit-scrollbar-thumb {
-    background: #2a2340;
+    background: #3a2724;
     border: 3px solid var(--color-bg);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent);
+    background: var(--color-accent-3);
   }
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
   }
 }
 
-/* Display type: narrower tracking than a title card, held back in weight so
-   headings read clinical rather than shouted. */
+/* Display type: a film title card rather than a poster. Tight leading, a
+   whisper of tracking, weight held back so the artwork keeps the room. */
 @utility font-display {
   font-family: var(--font-display);
-  font-variation-settings: 'opsz' 96, 'wdth' 88;
-  font-weight: 650;
+  font-variation-settings: 'opsz' 96, 'wdth' 92;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.015em;
-  line-height: 0.9;
+  letter-spacing: 0.008em;
+  line-height: 0.92;
 }
 
 @utility text-balance {
@@ -132,65 +145,36 @@
   overflow: hidden;
 }
 
-/* Angled panel corners, used on covers and buttons. */
-@utility notch {
-  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
-}
-@utility notch-sm {
-  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
-}
-
-/* Instrument ticks: a violet measure broken by a shorter gold one, the way a
-   measured grid runs under a mechanism diagram. */
-@utility hazard-strip {
-  background-image: repeating-linear-gradient(
-    90deg,
-    var(--color-accent) 0 44px,
-    transparent 44px 48px,
-    var(--color-accent-3) 48px 68px,
-    transparent 68px 72px
-  );
+/* A card surface that lets the artwork behind it bleed through, warm rather
+   than glassy: the page should feel printed, not machined. */
+@utility panel {
+  background: rgb(21 13 15 / 0.74);
+  border: 1px solid rgb(77 51 48 / 0.55);
 }
 
-/* Silk hairlines, the quiet textile under a section. */
-@utility bandage {
-  background-image: repeating-linear-gradient(-32deg, rgb(244 239 255 / 0.08) 0 1px, transparent 1px 18px);
+/* Silk-fine diagonal thread, used under quiet sections. */
+@utility silk {
+  background-image: repeating-linear-gradient(-32deg, rgb(248 239 228 / 0.05) 0 1px, transparent 1px 18px);
 }
 
-/* Oversized numerals, stroked rather than filled. */
-@utility stencil {
-  font-family: var(--font-display);
-  font-variation-settings: 'opsz' 96, 'wdth' 66;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: transparent;
-  -webkit-text-stroke: 1px rgb(236 228 255 / 0.22);
-}
-
-/* The moon plate: the one pale surface a screen is allowed. */
-@utility plate-white {
-  background: var(--color-accent-2);
-  color: #100d1c;
-}
-
-/* Hsin's aura: a violet-to-gold bloom that reads as light on fabric. */
-@utility moon-halo {
-  background: radial-gradient(closest-side, rgb(164 125 255 / 0.22), rgb(239 192 125 / 0.1) 55%, transparent 78%);
-}
-
-/* Ink wash, in place of a flat panel: a violet stain with a gold bloom. */
+/* Warm ink wash: vermilion stain with a gold bloom, replacing flat fills. */
 @utility ink-wash {
   background-image:
-    radial-gradient(60% 72% at 12% 8%, rgb(164 125 255 / 0.16), transparent 70%),
-    radial-gradient(52% 62% at 88% 92%, rgb(239 192 125 / 0.1), transparent 72%);
+    radial-gradient(58% 70% at 14% 10%, rgb(216 52 47 / 0.16), transparent 70%),
+    radial-gradient(50% 62% at 88% 88%, rgb(224 161 92 / 0.12), transparent 72%);
 }
 
-/* Fractal proliferation: one form repeated as offset echoes of itself. */
-@utility fractal {
-  text-shadow:
-    0.5px 0.5px 0 rgb(164 125 255 / 0.35),
-    1px 1px 0 rgb(164 125 255 / 0.2),
-    2.5px 2.5px 0 rgb(239 192 125 / 0.16);
+/* The moon: the single most recognisable shape in her art. */
+@utility moon-disc {
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 42% 38%,
+    #fff8ec 0%,
+    #f7e3bd 40%,
+    rgb(230 174 104 / 0.6) 62%,
+    rgb(216 52 47 / 0.2) 78%,
+    transparent 87%
+  );
 }
 
 /* A crescent, drawn with an inset shadow instead of an image. */
@@ -203,13 +187,47 @@
 @utility seal {
   display: inline-grid;
   place-items: center;
-  border: 1px solid rgb(239 192 125 / 0.55);
-  background: rgb(239 192 125 / 0.07);
-  color: var(--color-accent-3);
+  border: 1px solid rgb(224 161 92 / 0.6);
+  background: rgb(216 52 47 / 0.1);
+  color: var(--color-accent-2);
   font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
 }
 
-/* A clinical instrument label. */
+/* A ribbon thread: vermilion broken by gold, the trim on her sleeve. */
+@utility rule-tick {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--color-accent) 0 54px,
+    transparent 54px 58px,
+    var(--color-accent-3) 58px 90px,
+    transparent 90px 94px
+  );
+}
+
+/* The lacquer plate: the one pale surface the page is allowed. */
+@utility plate-ivory {
+  background: var(--color-fg);
+  color: #0a0607;
+}
+
+/* Oversized chapter numerals, stroked rather than filled. */
+@utility stencil {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 96, 'wdth' 66;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(248 239 228 / 0.26);
+}
+
+/* Warm bloom on display type: candlelight, not a glitch. */
+@utility bloom {
+  text-shadow:
+    0 0 42px rgb(216 52 47 / 0.32),
+    0 0 90px rgb(224 161 92 / 0.16);
+}
+
+/* A cinematic caption. */
 @utility tag {
   font-family: var(--font-mono);
   font-size: 8.5px;
@@ -217,33 +235,14 @@
   text-transform: uppercase;
 }
 
-/* CRT scanlines, kept very faint so body text stays readable. */
-@utility scanlines {
-  background-image: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.34) 0 1px, transparent 1px 3px);
-}
-
-/* MAGI-style blueprint grid. */
-@utility grid-bg {
-  background-image:
-    linear-gradient(rgb(164 125 255 / 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(164 125 255 / 0.06) 1px, transparent 1px);
-  background-size: 52px 52px;
-}
-
 @utility text-outline {
   color: transparent;
-  -webkit-text-stroke: 1px rgb(238 243 248 / 0.2);
+  -webkit-text-stroke: 1px rgb(248 239 228 / 0.22);
 }
 
 @utility jp {
   font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
-  letter-spacing: 0.08em;
-}
-
-@utility glitch {
-  text-shadow:
-    2px 0 rgb(164 125 255 / 0.42),
-    -2px 0 rgb(239 192 125 / 0.22);
+  letter-spacing: 0.12em;
 }
 
 @utility card-3d {
@@ -253,4 +252,34 @@
 
 @utility layer-lift {
   transform: translateZ(46px);
+}
+
+/* Drifting maple leaf. Positioned and timed per instance with CSS variables,
+   so the atmosphere costs no JavaScript once the page is up. */
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, -12vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--petal-opacity, 0.5);
+  }
+  90% {
+    opacity: var(--petal-opacity, 0.5);
+  }
+  100% {
+    transform: translate3d(7vw, 112vh, 0) rotate(320deg);
+    opacity: 0;
+  }
+}
+
+@utility petal {
+  position: absolute;
+  top: 0;
+  width: 9px;
+  height: 9px;
+  background: var(--color-accent);
+  clip-path: polygon(50% 0%, 82% 30%, 100% 62%, 62% 100%, 18% 88%, 0% 48%, 22% 14%);
+  animation: petal-fall var(--dur, 20s) linear var(--delay, 0s) infinite;
+  will-change: transform, opacity;
 }

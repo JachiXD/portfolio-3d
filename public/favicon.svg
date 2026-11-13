@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="JACHI_PORTFOLIO">
-  <rect width="64" height="64" fill="#08070f"/>
-  <path d="M4 4h48l8 8v48H12l-8-8Z" fill="#a47dff"/>
-  <path d="M4 4h48l8 8H4Z" fill="#efc07d"/>
-  <text x="30" y="45" text-anchor="middle" font-family="ui-monospace, 'SFMono-Regular', Menlo, monospace" font-size="32" font-weight="700" fill="#08070f">J</text>
-  <rect x="50" y="50" width="6" height="6" fill="#ece4ff"/>
+  <rect width="64" height="64" fill="#0a0607"/>
+  <path d="M4 4h48l8 8v48H12l-8-8Z" fill="#d8342f"/>
+  <path d="M4 4h48l8 8H4Z" fill="#e0a15c"/>
+  <text x="30" y="45" text-anchor="middle" font-family="ui-monospace, 'SFMono-Regular', Menlo, monospace" font-size="32" font-weight="700" fill="#0a0607">J</text>
+  <rect x="50" y="50" width="6" height="6" fill="#f8efe4"/>
 </svg>

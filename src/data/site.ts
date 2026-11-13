@@ -4,12 +4,17 @@
 // referenced from data have to carry that prefix too.
 export const asset = (file: string) => `${import.meta.env.BASE_URL}images/${file}`
 
+/**
+ * The visual theme is built around Hsin (心月狐), the Sentinel of Mengzhou in
+ * Wuthering Waves. Only details that are documented are used here — element,
+ * weapon, signature weapon and her two combat forms.
+ */
 export const site = {
   name: 'Jay Takle',
   brand: 'JACHI_PORTFOLIO',
-  codename: 'HSIN',
-  epithet: 'MOON FOX',
-  unit: 'EVA-00',
+  character: 'HSIN',
+  epithet: '心月狐 · MOON FOX',
+  realm: 'MENGZHOU',
   role: 'AI & machine learning developer',
   location: 'India',
   timezone: 'Asia/Kolkata',
@@ -22,6 +27,17 @@ export const site = {
     { label: 'Previous site', href: 'https://jachixd.github.io/portfolio' },
   ],
   marquee: ['Python', 'Computer vision', 'Machine learning', 'NLP', 'Gemini', 'React'],
+}
+
+export const characterSheet = {
+  name: '心月狐',
+  roman: 'Hsin',
+  title: 'Sentinel of Mengzhou',
+  line: 'Deeply emotional and fond of worldly joys, she has kept the fires of mortal life burning through the bustle of trade and the turning of the seasons.',
+  element: 'Electro',
+  weapon: 'Rectifier',
+  signature: 'Blooming Jadehaven',
+  forms: ['Answering Form', 'Illumining Form'],
 }
 
 export interface Project {
@@ -48,7 +64,7 @@ export const projects: Project[] = [
     client: 'CBSE competition',
     category: 'Voice assistant & LLM',
     cover: asset('saarthi.svg'),
-    tint: '#120d1c',
+    tint: '#170e10',
     summary: 'A voice-first school assistant that gives directions to nine campus locations, takes reports of bullying or weapons, and calls Gemini when a scripted answer is not enough.',
     role: ['Speech recognition', 'Intent flow', 'LLM integration'],
     deliverables: ['Offline voice loop', 'Synonym-based intent matching', 'Gemini safety responses'],
@@ -66,7 +82,7 @@ export const projects: Project[] = [
     client: 'Independent',
     category: 'Real-time computer vision',
     cover: asset('weapon-detection.svg'),
-    tint: '#0a1114',
+    tint: '#120b0d',
     summary: 'A webcam detector for guns and knives, rebuilt from YOLOv4 through YOLOv8 to a small custom cascade, with the frame budget always in view.',
     role: ['Model integration', 'ONNX export', 'Real-time inference'],
     deliverables: ['Trained detector', 'ONNX export', 'Live OpenCV demo'],
