@@ -1,4 +1,4 @@
-import { Environment, Float, Lightformer, MeshDistortMaterial, Sparkles } from '@react-three/drei'
+import { Environment, Float, Lightformer, MeshDistortMaterial } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import * as THREE from 'three'
@@ -284,6 +284,113 @@ interface DragState {
 }
 
 /**
+ * Lantern motes: the pollen and embers of her night market, not stars.
+ *
+ * One THREE.Points cloud with a hand-painted glow sprite. Each mote carries
+ * its own phase and speed, rising on a slow sway; the whole cloud lifts a
+ * little faster than the page as it scrolls, so the air has depth. Single draw
+ * call, no per-frame allocation, and it freezes completely under reduced
+ * motion.
+ */
+function LanternMotes({ reduced }: { reduced: boolean }) {
+  const points = useRef<THREE.Points>(null)
+
+  const { geometry, material, base, seeds } = useMemo(() => {
+    const count = 120
+    const base = new Float32Array(count * 3)
+    const seeds = new Float32Array(count * 2)
+    const positions = new Float32Array(count * 3)
+    const colors = new Float32Array(count * 3)
+    // Weighted like her art: mostly moon cream and lantern gold, an occasional
+    // vermilion mote, a rare jade glint.
+    const palette = [IVORY, GOLD, IVORY, GOLD, CRIMSON, IVORY, GOLD, JADE].map((hex) => new THREE.Color(hex))
+    for (let i = 0; i < count; i += 1) {
+      base[i * 3] = (Math.random() - 0.5) * 10
+      base[i * 3 + 1] = (Math.random() - 0.5) * 7
+      base[i * 3 + 2] = (Math.random() - 0.5) * 4 - 0.6
+      seeds[i * 2] = Math.random() * Math.PI * 2
+      seeds[i * 2 + 1] = 0.25 + Math.random() * 0.85
+      const tint = palette[i % palette.length]
+      const strength = 0.45 + Math.random() * 0.55
+      colors[i * 3] = tint.r * strength
+      colors[i * 3 + 1] = tint.g * strength
+      colors[i * 3 + 2] = tint.b * strength
+      positions[i * 3] = base[i * 3]
+      positions[i * 3 + 1] = base[i * 3 + 1]
+      positions[i * 3 + 2] = base[i * 3 + 2]
+    }
+
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+
+    // A soft warm bloom, painted once instead of shipped as an image.
+    const canvas = document.createElement('canvas')
+    canvas.width = 64
+    canvas.height = 64
+    const ctx = canvas.getContext('2d')
+    if (ctx) {
+      const glow = ctx.createRadialGradient(32, 32, 0, 32, 32, 32)
+      glow.addColorStop(0, 'rgba(255,248,236,1)')
+      glow.addColorStop(0.3, 'rgba(255,232,192,0.66)')
+      glow.addColorStop(0.62, 'rgba(255,190,132,0.2)')
+      glow.addColorStop(1, 'rgba(255,180,120,0)')
+      ctx.fillStyle = glow
+      ctx.fillRect(0, 0, 64, 64)
+    }
+    const sprite = new THREE.CanvasTexture(canvas)
+    sprite.colorSpace = THREE.SRGBColorSpace
+
+    const material = new THREE.PointsMaterial({
+      size: 0.105,
+      map: sprite,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.72,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      sizeAttenuation: true,
+    })
+
+    return { geometry, material, base, seeds }
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      geometry.dispose()
+      material.map?.dispose()
+      material.dispose()
+    }
+  }, [geometry, material])
+
+  useFrame((state) => {
+    const mesh = points.current
+    if (!mesh) return
+    const attr = mesh.geometry.getAttribute('position') as THREE.BufferAttribute
+    const array = attr.array as Float32Array
+    const time = state.clock.elapsedTime
+    // The cloud outruns the page slightly on scroll: near motes drift past,
+    // far ones barely move.
+    mesh.position.y = reduced ? 0 : Math.min(window.scrollY, 1600) * 0.0006
+    for (let i = 0; i < array.length / 3; i += 1) {
+      const phase = seeds[i * 2]
+      const speed = seeds[i * 2 + 1]
+      array[i * 3] = reduced ? base[i * 3] : base[i * 3] + Math.sin(time * 0.26 + phase) * 0.3
+      array[i * 3 + 1] = reduced ? base[i * 3 + 1] : ((time * speed * 0.16 + phase * 1.7) % 7) - 3.5
+      array[i * 3 + 2] = base[i * 3 + 2]
+    }
+    attr.needsUpdate = true
+  })
+
+  return (
+    <points ref={points} frustumCulled={false}>
+      <primitive object={geometry} attach="geometry" />
+      <primitive object={material} attach="material" />
+    </points>
+  )
+}
+
+/**
  * The hero sculpture: a polished, slowly distorting sphere inside a wire
  * shell and two orbit rings, with a dot travelling the inner ring. The
  * environment map is built from lightformers, so there is no HDR download.
@@ -395,7 +502,7 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
             </mesh>
           </group>
 
-          <Sparkles count={64} scale={[7, 5.5, 5]} size={2.4} speed={reduced ? 0 : 0.3} color={IVORY} opacity={0.55} />
+          <LanternMotes reduced={reduced} />
         </group>
       </group>
     </Float>
