@@ -27,7 +27,7 @@ export function Home() {
 
   return (
     <>
-      {/* Hero: Unit-00 sits behind the name, with a scrim at the bottom so the
+      {/* Hero: Unit-01 sits behind the name, with a scrim at the bottom so the
           type stays legible as the canvas moves. */}
       <section ref={heroRef} className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden border-b border-line md:justify-end">
         {/* On a phone the sculpture gets its own band above the name, rather
@@ -43,8 +43,9 @@ export function Home() {
         <div aria-hidden className="pointer-events-none absolute inset-0 grid-bg opacity-30" />
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-bg/80 to-transparent" />
         <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-t from-bg via-bg/85 to-transparent md:h-[55%]" />
-        <div aria-hidden className="bandage pointer-events-none absolute inset-x-0 bottom-0 h-[52%] opacity-60" />
-        <span aria-hidden className="stencil pointer-events-none absolute right-6 top-24 hidden text-[190px] leading-none lg:block">
+        <div aria-hidden className="ink-wash pointer-events-none absolute inset-x-0 bottom-0 h-[62%] opacity-90" />
+        <div aria-hidden className="moon-halo pointer-events-none absolute left-1/2 top-[46%] size-[62vmin] max-h-[520px] max-w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl md:top-1/2" />
+        <span aria-hidden className="stencil fractal pointer-events-none absolute right-6 top-24 hidden text-[190px] leading-none lg:block">
           00
         </span>
 
@@ -58,7 +59,7 @@ export function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mb-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-line/80 pb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-faint"
           >
-            <span className="text-accent-2">// FILE 000 — TEST TYPE</span>
+            <span className="text-accent-2">// FILE 000 — {site.epithet}</span>
             <span>
               SYNC <span className="text-fg">98.7%</span>
             </span>
@@ -193,12 +194,18 @@ function SectionHead({ index, label, jp, title, aside }: { index: string; label:
   return (
     <div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[9px] uppercase tracking-[0.24em] text-faint">
-        <span className="stencil text-[26px] leading-none">{index}</span>
-        <span className="h-px w-10 bg-accent" />
+        <span className="stencil fractal text-[26px] leading-none">{index}</span>
+        <span aria-hidden className="crescent size-2.5 text-accent-3" />
+        <span className="h-px w-8 bg-accent" />
         <span>{label}</span>
         <span className="jp text-[11px] normal-case tracking-[0.12em] text-muted">{jp}</span>
-        <span className="ml-auto hidden text-accent sm:inline">
-          {site.codename} // {site.unit}
+        <span className="ml-auto flex items-center gap-3">
+          <span className="hidden text-accent sm:inline">
+            {site.codename} // {site.unit}
+          </span>
+          <span aria-hidden className="seal size-6 text-[13px] leading-none">
+            心
+          </span>
         </span>
       </div>
       <div className="mt-4 flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b border-line pb-4">
@@ -256,7 +263,7 @@ function Achievements() {
               className={cx(
                 'group relative flex h-full min-h-[280px] flex-col justify-between overflow-hidden border p-7 sm:p-9 md:min-h-0',
                 featured
-                  ? 'border-accent/50 bg-[radial-gradient(130%_140%_at_100%_0%,rgba(255,59,82,0.24),rgba(11,18,32,1)_62%)]'
+                  ? 'border-accent/50 bg-[radial-gradient(130%_140%_at_100%_0%,rgba(164,125,255,0.26),rgba(16,13,28,1)_62%)]'
                   : 'border-line bg-surface hover:border-accent-2/40',
               )}
             >
