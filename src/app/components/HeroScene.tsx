@@ -1,4 +1,4 @@
-import { Environment, Float, Lightformer, MeshDistortMaterial } from '@react-three/drei'
+import { Environment, Float, Lightformer } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import * as THREE from 'three'
@@ -391,10 +391,10 @@ function LanternMotes({ reduced }: { reduced: boolean }) {
 }
 
 /**
- * The hero sculpture: a polished, slowly distorting sphere inside a wire
- * shell and two orbit rings, with a dot travelling the inner ring. The
- * environment map is built from lightformers, so there is no HDR download.
- * Dragging (mouse or finger) spins it, and phone tilt leans the whole rig.
+ * The hero sculpture: a glass bubble inside a wire shell and two orbit rings,
+ * with a dot travelling the inner ring. The environment map is built from
+ * lightformers, so there is no HDR download. Dragging (mouse or finger) spins
+ * it, and phone tilt leans the whole rig.
  */
 function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolean; fine: boolean } & DragState) {
   const moon = useMoonTexture()
@@ -465,17 +465,24 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
             </mesh>
           )}
 
+          {/* A glass bubble instead of a black planet: barely-there ivory with
+              a tight specular edge and a thin iridescent skin, so the key art
+              reads straight through it while it still holds real space. */}
           <mesh>
-            <sphereGeometry args={[1.26, 128, 128]} />
-            <MeshDistortMaterial
-              color="#1a1012"
-              metalness={1}
-              roughness={0.14}
-              distort={0.34}
-              speed={reduced ? 0 : 1.2}
+            <sphereGeometry args={[1.26, 96, 96]} />
+            <meshPhysicalMaterial
+              color={IVORY}
+              metalness={0.18}
+              roughness={0.04}
+              transparent
+              opacity={0.16}
+              envMapIntensity={2.4}
               clearcoat={1}
-              clearcoatRoughness={0.28}
-              envMapIntensity={1.6}
+              clearcoatRoughness={0.05}
+              iridescence={0.8}
+              iridescenceIOR={1.35}
+              depthWrite={false}
+              side={THREE.DoubleSide}
             />
           </mesh>
 
