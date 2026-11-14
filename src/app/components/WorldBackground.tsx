@@ -189,7 +189,7 @@ export function WorldBackground({ overlay = 0.62 }: { overlay?: number }) {
       {/* Readability scrim: warm, heavier at the bottom where the type sits. */}
       <motion.div
         style={reduced ? { opacity: overlay } : { opacity: veil }}
-        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,6,7,0.55)_0%,rgba(10,6,7,0.28)_38%,rgba(10,6,7,0.78)_82%,#0a0607_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,6,7,0.5)_0%,rgba(10,6,7,0.2)_38%,rgba(10,6,7,0.6)_82%,#0a0607_100%)]"
       />
       <div className="ink-wash absolute inset-0 opacity-70" />
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/85 to-transparent" />
