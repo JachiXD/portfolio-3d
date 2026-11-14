@@ -63,15 +63,18 @@ export function Work() {
                 <dd className="mt-1.5 text-fg">{value}</dd>
               </div>
             ))}
-            {project.link && (
-              <div className="border-l border-accent pl-3">
-                <a href={project.link} className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.16em] text-accent-2">
-                  VISIT THE SITE
-                  <ArrowUpRight className="size-3.5" />
-                </a>
-              </div>
-            )}
           </dl>
+          {project.link && (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-8 inline-flex items-center gap-2 border border-accent bg-accent/10 px-5 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-fg transition-colors hover:bg-accent hover:text-fg"
+            >
+              VISIT LIVE PROJECT
+              <ArrowUpRight className="size-4" />
+            </a>
+          )}
         </Reveal>
 
         <div className="max-w-2xl">

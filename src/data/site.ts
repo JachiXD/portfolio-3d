@@ -94,6 +94,26 @@ export const projects: Project[] = [
     ],
     size: 'large',
   },
+  {
+    slug: 'riko',
+    title: 'Riko',
+    client: 'Personal project',
+    category: 'Interactive AI companion',
+    year: '2026',
+    cover: asset('riko.svg'),
+    tint: '#140b11',
+    summary: 'Riko is an experimental AI companion project featuring an interactive character interface with voice and text-based conversations. Designed to combine conversational AI with a character-driven experience, Riko aims to make digital interactions feel more personal and engaging.',
+    role: ['Character and scene', 'Voice pipeline', 'Front-end'],
+    deliverables: ['Browser speech recognition', 'Neural voice running locally', 'Lip sync and body motion'],
+    stack: ['JavaScript', 'three.js', '@pixiv/three-vrm', 'Web Speech API', 'Kokoro TTS', 'GitHub Pages'],
+    link: 'https://jachixd.github.io/riko-web/',
+    body: [
+      'Riko is a character you can talk to inside a browser tab. You press the mic and speak, or type if the room is quiet, and she answers out loud while a 3D model watches you — head turning, nodding, blinking — instead of a text box filling in below a static portrait.',
+      'The interesting constraint was that the original version was a Python desktop program: a local microphone loop, a desktop window and API keys. None of that survives on a static site, so the browser build rebuilds the loop around what a browser already has — speech recognition for ears, a neural voice model running on the visitor’s own machine for her voice, and three-vrm for the character. It works from GitHub Pages with no server, no account and no key to leak.',
+      'Most of the work went into the details that make a model read as alive: the mouth follows the real loudness of her own audio rather than a guessed animation, the camera measures the model instead of assuming its size, and Japanese words are spoken with the correct pronunciation rather than an English voice flattening them. She is still an experiment, but she is an experiment that answers back.',
+    ],
+    size: 'large',
+  },
 ]
 
 export const bySlug = (slug: string) => projects.find((p) => p.slug === slug)
