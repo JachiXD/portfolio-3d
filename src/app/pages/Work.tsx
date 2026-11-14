@@ -18,10 +18,10 @@ export function Work() {
   const facts: Array<[string, string]> = [
     ['CLIENT', project.client],
     ['ROLE', project.role.join(', ')],
-    ['DELIVERED', project.deliverables.join(', ')],
+    ['KEY FEATURES', project.deliverables.join(', ')],
   ]
   if (project.year) facts.splice(1, 0, ['YEAR', project.year])
-  if (project.stack) facts.push(['STACK', project.stack.join(', ')])
+  if (project.stack) facts.push(['TECHNOLOGY', project.stack.join(', ')])
 
   return (
     <article className="mx-auto max-w-[1400px] px-5 pt-28 sm:px-8 sm:pt-36">

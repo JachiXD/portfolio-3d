@@ -33,7 +33,7 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
         <Link
           ref={ref}
           to={`/work/${project.slug}`}
-          className="group relative block border border-line bg-surface/70 p-2 backdrop-blur-sm transition-colors hover:border-accent/60"
+          className="group relative block border border-line bg-surface/70 p-2 backdrop-blur-sm transition-colors hover:border-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => {
             setHover(false)
@@ -78,6 +78,12 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
               OPEN STUDY
               <span aria-hidden>↗</span>
             </motion.span>
+            {/* The pointer-following bubble is desktop-only, so the card also
+                carries a quiet standing invitation that works under a thumb. */}
+            <span className="pointer-events-none absolute bottom-3 left-3 inline-flex items-center gap-1.5 border border-white/25 bg-black/50 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-fg">
+              VIEW STUDY
+              <span aria-hidden className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+            </span>
             {/* The drawn plates already carry their own footer line. */}
             {!project.cover.endsWith('.svg') && (
               <span aria-hidden className="absolute bottom-3 right-3 font-mono text-[8px] uppercase tracking-[0.18em] text-white/45">SCALE 1:1</span>

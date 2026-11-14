@@ -53,16 +53,16 @@ export function PinnedStatement() {
           </div>
 
           <h2 className="mt-7 font-display text-[clamp(38px,7.4vw,116px)] leading-[0.95]">
-            Intelligence is only <span className="text-outline">half</span> the craft.
+            You only live <span className="text-outline">once</span>,
             <br />
-            <span className="text-accent-2">The interface</span> is the rest.
+            but if you do it right, once is <span className="text-accent-2">enough</span>.
           </h2>
 
           <motion.div style={{ scaleX: line }} className="mt-10 h-px origin-left bg-gradient-to-r from-accent via-accent-3 to-transparent" />
 
           <div className="mt-5 flex items-center justify-between font-mono text-[8.5px] uppercase tracking-[0.2em] text-faint">
             <span>↓ KEEP SCROLLING</span>
-            <span className="text-accent-3">● RESONANCE 100%</span>
+            <span className="text-accent-3">— MAE WEST</span>
           </div>
         </motion.div>
       </div>
