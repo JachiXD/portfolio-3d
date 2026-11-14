@@ -34,13 +34,16 @@ export function Footer() {
   }
 
   const field =
-    'h-14 w-full border border-line-strong bg-black/30 px-4 font-mono text-[12px] uppercase tracking-[0.1em] placeholder:text-faint placeholder:uppercase placeholder:tracking-[0.14em] transition-colors focus:border-accent focus:outline-none'
+    'h-14 w-full border border-line-strong bg-bg/80 px-4 font-mono text-[12px] uppercase tracking-[0.1em] placeholder:text-muted placeholder:uppercase placeholder:tracking-[0.14em] transition-colors focus:border-accent focus:outline-none'
 
   return (
     <footer id="contact" className="relative mt-32 overflow-hidden border-t border-accent-3/20 sm:mt-44">
       <div aria-hidden className="h-[2px] rule-tick opacity-80" />
       <div aria-hidden className="moon-disc pointer-events-none absolute -left-[16%] top-6 hidden size-[56vmin] opacity-20 blur-[1px] sm:block" />
       <div aria-hidden className="ink-wash pointer-events-none absolute inset-0 opacity-60" />
+      {/* She runs to the very bottom of the page now, so the contact block gets
+          its own scrim: enough to read every field, not enough to lose her. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,6,7,0.62)_0%,rgba(10,6,7,0.78)_55%,rgba(10,6,7,0.88)_100%)]" />
 
       <div className="relative mx-auto max-w-[1400px] px-5 py-20 sm:px-8 sm:py-28">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3 font-mono text-[9px] uppercase tracking-[0.22em] text-faint">
@@ -80,8 +83,8 @@ export function Footer() {
                 <p className="mt-2 text-[14px] text-muted">I read everything myself and reply within two days.</p>
               </div>
             ) : (
-              <form onSubmit={submit} className="flex flex-col gap-3">
-                <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">WRITE TO ME // 捌</p>
+              <form onSubmit={submit} className="flex flex-col gap-3 bg-bg/55 p-5 backdrop-blur-sm sm:p-6">
+                <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted">WRITE TO ME // 捌</p>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <input required placeholder="NAME" className={field} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                   <input required type="email" placeholder="EMAIL" className={field} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
