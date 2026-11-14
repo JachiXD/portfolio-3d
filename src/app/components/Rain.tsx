@@ -40,7 +40,7 @@ export function Rain({ density = 1 }: { density?: number }) {
       y: spread ? between(-height, height) : between(-height * 0.3, 0),
       len: between(11, 30),
       speed: between(380, 880),
-      alpha: between(0.07, 0.24),
+      alpha: between(0.09, 0.3),
       drift: between(2, 8),
     })
 
@@ -52,7 +52,7 @@ export function Rain({ density = 1 }: { density?: number }) {
       canvas.height = Math.round(height * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       ctx.lineCap = 'round'
-      const count = Math.round((width < 640 ? 80 : 150) * density)
+      const count = Math.round((width < 640 ? 95 : 190) * density)
       drops = Array.from({ length: count }, () => make(true))
     }
 
