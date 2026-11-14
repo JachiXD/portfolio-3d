@@ -112,10 +112,6 @@ export function Home() {
         </motion.div>
       </section>
 
-      {/* Chapter 貳 — the character chapter. Scroll drives the framing, so the
-          portrait travels and settles instead of just sitting on the page. */}
-      <CharacterChapter />
-
       {/* Marquee */}
       <div className="overflow-hidden border-y border-accent-3/15 bg-surface/40 py-3 backdrop-blur-sm" aria-hidden>
         <ul className="flex w-max animate-marquee items-center gap-8 whitespace-nowrap font-mono text-[10.5px] uppercase tracking-[0.26em] text-muted">
@@ -129,9 +125,9 @@ export function Home() {
         </ul>
       </div>
 
-      {/* Chapter 肆 — the portfolio itself. */}
+      {/* Chapter 貳 — the portfolio itself, straight after the title card. */}
       <section id="work" className="relative mx-auto max-w-[1400px] scroll-mt-24 px-5 pt-24 sm:px-8 sm:pt-32">
-        <SectionHead index="肆" label="SELECTED WORK" jp="作" title="Projects" aside={`${projects.length} STUDIES`} />
+        <SectionHead index="貳" label="SELECTED WORK" jp="作" title="Projects" aside={`${projects.length} STUDIES`} />
         <TiltDeck className="mt-12 grid gap-x-6 gap-y-14 md:grid-cols-2 lg:gap-x-8 lg:gap-y-20">
           {projects.map((p, i) => (
             <WorkCard key={p.slug} project={p} index={i} />
@@ -140,6 +136,11 @@ export function Home() {
       </section>
 
       <PinnedStatement />
+
+      {/* Chapter 肆 — the character showcase, held back until the work has
+          introduced him. Scroll drives the framing, so the portrait travels
+          and settles instead of just sitting on the page. */}
+      <CharacterChapter />
 
       {/* Chapter 伍 — about */}
       <section className="mx-auto max-w-[1400px] px-5 pt-32 sm:px-8 sm:pt-44">
@@ -193,7 +194,7 @@ export function Home() {
 }
 
 /**
- * The character chapter. Everything is scroll-scrubbed: the portrait opens
+ * The character showcase. Everything is scroll-scrubbed: the portrait opens
  * larger and settles, the moon behind it travels, the caption sheet lifts.
  */
 function CharacterChapter() {
@@ -258,7 +259,7 @@ function CharacterChapter() {
 
           <motion.div style={reduced ? undefined : { y: copyY }} className="relative">
             <div className="flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.26em] text-faint">
-              <span className="text-accent">貳</span>
+              <span className="text-accent">肆</span>
               <span className="crescent size-2.5 text-accent-2" />
               <span>THE MOON FOX</span>
               <span className="jp text-[11px] normal-case tracking-[0.14em] text-muted">月華</span>
