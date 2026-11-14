@@ -1,26 +1,26 @@
 import { useEffect, useRef } from 'react'
 
-interface Drop {
+interface Mote {
+  kind: 'streak' | 'bead'
   x: number
   y: number
   len: number
+  radius: number
   speed: number
   alpha: number
-  drift: number
 }
 
 /**
  * Night rain over the key art.
  *
- * One canvas, one draw loop: the drops fall in front of Hsin but behind every
- * word on the page, so the artwork still reads. Pale moon-ivory streaks, a
- * slight wind lean, a thin frame budget (the loop pauses with the tab and caps
- * the device pixel ratio), and under reduced motion it paints a single still
- * frame instead of animating.
+ * One canvas, one draw loop: the weather falls in front of Hsin but behind
+ * every word on the page, so the artwork still reads. Two kinds of water,
+ * both falling straight down: thin ivory streaks for the rain itself, and a
+ * slower scatter of round beads that cling and slide like droplets on glass.
  *
- * The page moving makes the weather answer: while the visitor scrolls the
- * streaks fall faster and brighter, and once they stop it eases back to the
- * quiet baseline over about a second.
+ * A thin frame budget — the loop pauses with the tab, caps the device pixel
+ * ratio, and paints a single still frame under reduced motion. While the page
+ * is moving the fall quickens and brightens, then eases back once it stops.
  */
 export function Rain({ density = 1 }: { density?: number }) {
   const ref = useRef<HTMLCanvasElement>(null)
@@ -31,7 +31,7 @@ export function Rain({ density = 1 }: { density?: number }) {
     if (!canvas || !ctx) return
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
-    let drops: Drop[] = []
+    let motes: Mote[] = []
     let width = 0
     let height = 0
     let frame = 0
@@ -41,14 +41,37 @@ export function Rain({ density = 1 }: { density?: number }) {
 
     const between = (min: number, max: number) => min + Math.random() * (max - min)
 
-    const make = (spread: boolean): Drop => ({
-      x: between(-0.1 * width, 1.1 * width),
-      y: spread ? between(-height, height) : between(-height * 0.3, 0),
-      len: between(11, 30),
-      speed: between(380, 880),
-      alpha: between(0.09, 0.3),
-      drift: between(2, 8),
+    const rain = (): Mote => ({
+      kind: 'streak',
+      x: between(0, width),
+      y: between(-height * 0.3, 0),
+      len: between(14, 34),
+      radius: 0,
+      speed: between(420, 900),
+      alpha: between(0.1, 0.32),
     })
+
+    // Beads travel far slower than the rain, the way a droplet catches on
+    // glass and only gives way every second or two.
+    const bead = (spread: boolean): Mote => ({
+      kind: 'bead',
+      x: between(0, width),
+      y: spread ? between(0, height) : between(-40, 0),
+      len: 0,
+      radius: between(1.4, 3.4),
+      speed: between(26, 82),
+      alpha: between(0.16, 0.42),
+    })
+
+    const respawn = (mote: Mote) => {
+      const next = mote.kind === 'bead' ? bead(false) : rain()
+      mote.x = next.x
+      mote.y = next.y
+      mote.len = next.len
+      mote.radius = next.radius
+      mote.speed = next.speed
+      mote.alpha = next.alpha
+    }
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
@@ -58,35 +81,45 @@ export function Rain({ density = 1 }: { density?: number }) {
       canvas.height = Math.round(height * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       ctx.lineCap = 'round'
-      const count = Math.round((width < 640 ? 95 : 190) * density)
-      drops = Array.from({ length: count }, () => make(true))
+      const streaks = Math.round((width < 640 ? 80 : 165) * density)
+      const beads = Math.round((width < 640 ? 18 : 34) * density)
+      motes = [...Array.from({ length: streaks }, rain), ...Array.from({ length: beads }, () => bead(true))]
     }
 
     const paint = (delta: number | null) => {
       ctx.clearRect(0, 0, width, height)
-      // One multiplier for both: a gust quickens the fall and lifts the streaks
-      // toward full brightness, never past it.
-      const speedScale = 1 + gust * 1.1
-      const alphaScale = 1 + gust * 0.9
-      for (const drop of drops) {
+      // One gust, two scales: the rain answers it strongly, the beads only drift
+      // a little faster, so the glass never loses its calm.
+      const fast = 1 + gust * 1.1
+      const lift = 1 + gust * 0.9
+
+      for (const mote of motes) {
         if (delta !== null) {
-          drop.y += drop.speed * speedScale * delta
-          drop.x += drop.drift * delta * 8
-          if (drop.y - drop.len > height) {
-            const next = make(false)
-            drop.x = next.x
-            drop.y = next.y
-            drop.len = next.len
-            drop.speed = next.speed
-            drop.alpha = next.alpha
-            drop.drift = next.drift
-          }
+          mote.y += mote.speed * (mote.kind === 'bead' ? 1 + gust * 0.35 : fast) * delta
+          if (mote.y - mote.len > height) respawn(mote)
         }
-        ctx.strokeStyle = `rgba(248, 239, 228, ${Math.min(1, drop.alpha * alphaScale)})`
+
+        if (mote.kind === 'bead') {
+          if (mote.y - mote.radius < 0) continue
+          // A bead of water: soft body, bright inner highlight, faint rim.
+          ctx.fillStyle = `rgba(248, 239, 228, ${Math.min(1, mote.alpha * 0.5 * lift)})`
+          ctx.beginPath()
+          ctx.arc(mote.x, mote.y, mote.radius, 0, Math.PI * 2)
+          ctx.fill()
+
+          ctx.fillStyle = `rgba(255, 252, 246, ${Math.min(1, mote.alpha * 1.5 * lift)})`
+          ctx.beginPath()
+          ctx.arc(mote.x - mote.radius * 0.3, mote.y - mote.radius * 0.34, mote.radius * 0.36, 0, Math.PI * 2)
+          ctx.fill()
+          continue
+        }
+
+        // Straight down: same x for both ends of the stroke, no lean.
+        ctx.strokeStyle = `rgba(248, 239, 228, ${Math.min(1, mote.alpha * lift)})`
         ctx.lineWidth = 1 + gust * 0.35
         ctx.beginPath()
-        ctx.moveTo(drop.x, drop.y)
-        ctx.lineTo(drop.x - drop.drift, drop.y + drop.len)
+        ctx.moveTo(mote.x, mote.y)
+        ctx.lineTo(mote.x, mote.y + mote.len)
         ctx.stroke()
       }
     }
