@@ -1,6 +1,8 @@
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 
+import { Rain } from './Rain'
+
 // Everything the background needs lives in `public/media/`. Dropping a file in
 // with one of these names is the whole setup:
 //
@@ -198,6 +200,10 @@ export function WorldBackground({ overlay = 0.62 }: { overlay?: number }) {
       />
       <div className="ink-wash absolute inset-0 opacity-50" />
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/70 to-transparent" />
+
+      {/* Rain sits above the scrim, so it falls in front of Hsin rather than
+          being dimmed away with her, but still behind every word. */}
+      <Rain density={coarse ? 0.6 : 1} />
 
       {!reduced && <Atmosphere density={coarse ? 7 : 16} />}
     </div>
