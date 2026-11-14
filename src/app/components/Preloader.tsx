@@ -25,7 +25,7 @@ export function Preloader() {
     const timer = window.setTimeout(() => {
       setShow(false)
       sessionStorage.setItem('preloaded', '1')
-    }, 1500)
+    }, 1900)
     return () => {
       controls.stop()
       window.clearTimeout(timer)
@@ -58,7 +58,7 @@ export function Preloader() {
               fetchPriority="high"
               decoding="async"
               onLoad={() => setArtReady(true)}
-              className={`absolute inset-0 size-full object-cover object-[52%_26%] transition-opacity duration-[1200ms] sm:object-[50%_30%] ${
+              className={`absolute inset-0 size-full object-cover object-[52%_26%] transition-opacity duration-500 sm:object-[50%_30%] ${
                 artReady ? 'opacity-100' : 'opacity-0'
               }`}
             />
