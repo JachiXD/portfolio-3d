@@ -121,7 +121,7 @@ export function WorldBackground({ overlay = 0.62 }: { overlay?: number }) {
   // pushes in as it scrolls, so every section reads as a different framing.
   const y = useTransform(smooth, [0, 1], ['0%', '-5%'])
   const scale = useTransform(smooth, [0, 1], [1.03, 1.16])
-  const veil = useTransform(smooth, [0, 0.45, 1], [0.74, 0.64, 0.6])
+  const veil = useTransform(smooth, [0, 0.45, 1], [0.84, 0.76, 0.7])
 
   // Scroll-scrubbed video, when a video exists and motion is welcome. With no
   // video the handler is inert, so this never costs anything today.
@@ -192,7 +192,7 @@ export function WorldBackground({ overlay = 0.62 }: { overlay?: number }) {
       {/* Readability scrim: warm, heavier at the bottom where the type sits. */}
       <motion.div
         style={reduced ? { opacity: overlay } : { opacity: veil }}
-        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,6,7,0.55)_0%,rgba(10,6,7,0.26)_38%,rgba(10,6,7,0.74)_82%,#0a0607_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,6,7,0.82)_0%,rgba(10,6,7,0.62)_38%,rgba(10,6,7,0.86)_82%,#0a0607_100%)]"
       />
       <div className="ink-wash absolute inset-0 opacity-50" />
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/70 to-transparent" />
