@@ -288,7 +288,7 @@ function CharacterChapter() {
 
             <div className="mt-7 flex items-center gap-3 font-mono text-[8.5px] uppercase tracking-[0.2em] text-faint">
               <span className="h-px w-10 bg-accent-3/50" />
-              <span className="animate-pulse">↓</span> SCROLL TO CONTINUE
+              <span className="animate-pulse">↓</span> SAY HELLO
             </div>
           </motion.div>
         </div>
