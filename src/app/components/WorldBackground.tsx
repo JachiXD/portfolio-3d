@@ -121,7 +121,7 @@ export function WorldBackground({ overlay = 0.62 }: { overlay?: number }) {
   // pushes in as it scrolls, so every section reads as a different framing.
   const y = useTransform(smooth, [0, 1], ['0%', '-5%'])
   const scale = useTransform(smooth, [0, 1], [1.03, 1.16])
-  const veil = useTransform(smooth, [0, 0.45, 1], [0.55, 0.44, 0.44])
+  const veil = useTransform(smooth, [0, 0.45, 1], [0.74, 0.64, 0.6])
 
   // Scroll-scrubbed video, when a video exists and motion is welcome. With no
   // video the handler is inert, so this never costs anything today.
@@ -152,7 +152,10 @@ export function WorldBackground({ overlay = 0.62 }: { overlay?: number }) {
   }, [scrub, video])
 
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-bg">
+    // z-0, not -z-10: a negative layer paints behind the opaque body
+    // background, which is how the artwork went missing entirely. The page
+    // content is wrapped in `relative z-10`, so this stays underneath it.
+    <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-bg">
       <motion.div style={reduced ? undefined : { y, scale }} className="absolute inset-0">
         <video
           ref={videoRef}
@@ -189,9 +192,9 @@ export function WorldBackground({ overlay = 0.62 }: { overlay?: number }) {
       {/* Readability scrim: warm, heavier at the bottom where the type sits. */}
       <motion.div
         style={reduced ? { opacity: overlay } : { opacity: veil }}
-        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,6,7,0.28)_0%,rgba(10,6,7,0.06)_38%,rgba(10,6,7,0.5)_82%,#0a0607_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,6,7,0.55)_0%,rgba(10,6,7,0.26)_38%,rgba(10,6,7,0.74)_82%,#0a0607_100%)]"
       />
-      <div className="ink-wash absolute inset-0 opacity-35" />
+      <div className="ink-wash absolute inset-0 opacity-50" />
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/70 to-transparent" />
 
       {!reduced && <Atmosphere density={coarse ? 7 : 16} />}
