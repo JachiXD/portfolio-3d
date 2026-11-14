@@ -220,30 +220,31 @@ function CharacterChapter() {
       <div className="relative flex items-center overflow-hidden lg:sticky lg:top-0 lg:h-[100svh]">
         <motion.div style={reduced ? undefined : { y: moonY }} aria-hidden className="moon-disc absolute -right-[14%] top-1/2 hidden size-[62vmin] -translate-y-1/2 opacity-30 blur-[2px] lg:block" />
         <div aria-hidden className="absolute inset-0 bg-[radial-gradient(80%_70%_at_20%_50%,rgba(216,52,47,0.14),transparent_70%)]" />
+        {/* The key art runs behind this chapter now, so the caption sheet gets
+            its own scrim: downwards on phones, left-to-right on desktop where
+            the copy sits beside the portrait. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,6,7,0.12)_0%,rgba(10,6,7,0.55)_42%,rgba(10,6,7,0.94)_100%)] lg:bg-[linear-gradient(90deg,rgba(10,6,7,0.25)_0%,rgba(10,6,7,0.8)_52%,rgba(10,6,7,0.95)_100%)]"
+        />
 
         <div className="relative mx-auto grid w-full max-w-[1400px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
           <motion.div style={reduced ? undefined : { scale: portraitScale, x: portraitX }} className="relative">
             <div className="relative mx-auto w-full max-w-[300px] sm:max-w-[340px] lg:mx-0 lg:max-w-[380px]">
               <div aria-hidden className="moon-disc absolute -inset-4 opacity-25 blur-lg" />
               <div className="relative aspect-[3/4] overflow-hidden rounded-t-[999px] border border-accent-3/30 bg-bg/70">
-                {/* Designed stand-in until the key art is dropped into
-                    public/media: a moon, a seal and a vignette. */}
                 <div aria-hidden className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_100%,rgba(216,52,47,0.3),transparent_62%)]" />
-                <div aria-hidden className="moon-disc absolute left-1/2 top-[45%] aspect-square w-[60%] -translate-x-1/2 -translate-y-1/2 opacity-90" />
-                <span aria-hidden className="stencil absolute inset-x-0 bottom-12 text-center text-[52px] leading-none">
-                  心月狐
-                </span>
-                <span aria-hidden className="absolute inset-4 rounded-t-[999px] border border-accent-2/15" />
+                <div aria-hidden className="absolute inset-4 rounded-t-[999px] border border-accent-2/15" />
                 <img
                   src={BACKGROUND_STILL}
                   alt="Hsin, the Moon Fox"
                   loading="lazy"
                   decoding="async"
                   className="absolute inset-0 size-full object-cover"
-                  style={{ objectPosition: 'var(--bg-pos)' }}
+                  style={{ objectPosition: '50% 42%' }}
                   onError={(event) => {
-                    // No upload yet: the moon behind stands in, so the frame
-                    // still reads as a deliberate composition.
+                    // No key art uploaded: fade out so the framed moon behind
+                    // stands in as a deliberate composition.
                     event.currentTarget.style.opacity = '0'
                   }}
                 />
