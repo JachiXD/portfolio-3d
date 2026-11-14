@@ -118,7 +118,7 @@ export function Home() {
         <ul className="flex w-max animate-marquee items-center gap-8 whitespace-nowrap font-mono text-[10.5px] uppercase tracking-[0.26em] text-muted">
           {[...site.marquee, ...site.marquee].map((item, i) => (
             <li key={i} className="flex items-center gap-8">
-              <span className="text-accent">✦</span>
+              <span aria-hidden className="crescent size-1.5 shrink-0 text-accent-2" />
               {item}
               <span className="text-accent-3/60">·</span>
             </li>
