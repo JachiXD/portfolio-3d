@@ -466,7 +466,7 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
           {moon && (
             <mesh position={[1.05, 0.8, -2.6]} scale={3.8}>
               <planeGeometry args={[1, 1]} />
-              <meshBasicMaterial map={moon} transparent depthWrite={false} opacity={0.34} />
+              <meshBasicMaterial map={moon} transparent depthWrite={false} opacity={0.22} />
             </mesh>
           )}
 
@@ -573,7 +573,7 @@ export function HeroScene() {
     >
       {/* The moon sits under the canvas, so the hero is already a scene while
           WebGL boots and on machines without it. */}
-      <div aria-hidden className="moon-disc absolute left-1/2 top-1/2 size-[74vmin] max-h-[440px] max-w-[440px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 blur-2xl" />
+      <div aria-hidden className="moon-disc absolute left-1/2 top-1/2 size-[74vmin] max-h-[440px] max-w-[440px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-2xl" />
       {supported && (
         <Canvas
           dpr={[1, 1.8]}
