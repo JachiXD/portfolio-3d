@@ -236,8 +236,11 @@
 }
 
 @utility text-outline {
-  color: transparent;
-  -webkit-text-stroke: 1px rgb(248 239 228 / 0.22);
+  /* Hollow, but it has to survive a bright key art behind it: a faint fill
+     plus a heavier stroke, and a soft dark halo so it never dissolves. */
+  color: rgb(248 239 228 / 0.16);
+  -webkit-text-stroke: 2px rgb(248 239 228 / 0.92);
+  text-shadow: 0 2px 24px rgb(10 6 7 / 0.55);
 }
 
 @utility jp {
