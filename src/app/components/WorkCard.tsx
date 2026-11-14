@@ -10,9 +10,12 @@ import { Parallax } from './motion'
  * Cards answer the pointer in 3D: the whole card rotates toward the cursor
  * while the cover sits on a raised layer, so the tilt reads as depth rather
  * than a skew. Springs keep it from feeling twitchy.
+ *
+ * A project with a live site gets that site behind its cover — the plate is
+ * what people try to click — while the title stays the way into the study.
  */
 export function WorkCard({ project, index = 0 }: { project: Project; index?: number }) {
-  const ref = useRef<HTMLAnchorElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
   const [hover, setHover] = useState(false)
   const x = useSpring(useMotionValue(0), { stiffness: 300, damping: 30 })
   const y = useSpring(useMotionValue(0), { stiffness: 300, damping: 30 })
@@ -30,10 +33,9 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
       className={cx(project.size === 'large' ? 'md:col-span-2' : 'md:col-span-1')}
     >
       <motion.div style={{ rotateX, rotateY, transformPerspective: 1200 }} className="card-3d">
-        <Link
+        <div
           ref={ref}
-          to={`/work/${project.slug}`}
-          className="group relative block border border-line bg-surface/70 p-2 backdrop-blur-sm transition-colors hover:border-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+          className="group relative block border border-line bg-surface/70 p-2 backdrop-blur-sm transition-colors hover:border-accent/60"
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => {
             setHover(false)
@@ -62,7 +64,7 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
               <Parallax src={project.cover} alt={project.title} className="size-full" strength={6} />
             </div>
             <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/0 to-black/15" />
-            <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 border border-white/20 bg-black/45 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm">
+            <span className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 border border-white/20 bg-black/45 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm">
               <span className="size-1 rounded-full bg-accent-3" />
               {project.year ? `${project.year} · ` : ''}
               {project.category}
@@ -75,29 +77,58 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
                 hover ? 'scale-100 opacity-100' : 'scale-75 opacity-0',
               )}
             >
-              OPEN STUDY
+              {project.link ? 'OPEN LIVE SITE' : 'OPEN STUDY'}
               <span aria-hidden>↗</span>
             </motion.span>
-            {/* The pointer-following bubble is desktop-only, so the card also
-                carries a quiet standing invitation that works under a thumb. */}
-            <span className="pointer-events-none absolute bottom-3 left-3 inline-flex items-center gap-1.5 border border-white/25 bg-black/50 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-fg">
-              VIEW STUDY
-              <span aria-hidden className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
-            </span>
             {/* The drawn plates already carry their own footer line. */}
             {!project.cover.endsWith('.svg') && (
               <span aria-hidden className="absolute bottom-3 right-3 font-mono text-[8px] uppercase tracking-[0.18em] text-white/45">SCALE 1:1</span>
             )}
+
+            {project.link ? (
+              // The cover is the thing people try to click on a live project, so it
+              // opens the site. The study stays reachable through the title below.
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open ${project.title} — live project`}
+                className="absolute inset-0 z-10 flex items-end justify-start p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              >
+                <span className="inline-flex items-center gap-1.5 border border-white/25 bg-black/50 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-fg">
+                  LIVE PROJECT
+                  <span aria-hidden className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+                </span>
+              </a>
+            ) : (
+              <Link
+                to={`/work/${project.slug}`}
+                aria-label={`Open ${project.title} study`}
+                className="absolute inset-0 z-10 flex items-end justify-start p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              >
+                <span className="inline-flex items-center gap-1.5 border border-white/25 bg-black/50 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-fg">
+                  VIEW STUDY
+                  <span aria-hidden className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+                </span>
+              </Link>
+            )}
           </div>
 
           <div className="mt-3 flex items-baseline justify-between gap-4 px-1" style={{ transform: 'translateZ(16px)' }}>
-            <h3 className="font-display text-[27px] sm:text-[32px]">{project.title}</h3>
+            <h3 className="font-display text-[27px] sm:text-[32px]">
+              <Link
+                to={`/work/${project.slug}`}
+                className="transition-colors hover:text-accent-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              >
+                {project.title}
+              </Link>
+            </h3>
             <p className="shrink-0 font-mono text-[9px] uppercase tracking-[0.14em] text-muted transition-colors group-hover:text-accent-2">
               {project.client}
               {project.year && <span className="ml-2 tabular-nums text-faint">{project.year}</span>}
             </p>
           </div>
-        </Link>
+        </div>
       </motion.div>
     </motion.div>
   )
