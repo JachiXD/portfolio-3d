@@ -273,13 +273,36 @@
   }
 }
 
+/* A single maple leaf, the shape scattered through her key art. Cut with a
+   polygon rather than an image, so it costs nothing to draw. */
 @utility petal {
   position: absolute;
   top: 0;
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
   background: var(--color-accent);
-  clip-path: polygon(50% 0%, 82% 30%, 100% 62%, 62% 100%, 18% 88%, 0% 48%, 22% 14%);
+  clip-path: polygon(
+    50% 0%,
+    62% 14%,
+    60% 25%,
+    76% 18%,
+    88% 32%,
+    74% 43%,
+    96% 50%,
+    70% 57%,
+    63% 72%,
+    53% 63%,
+    50% 100%,
+    47% 63%,
+    37% 72%,
+    30% 57%,
+    4% 50%,
+    26% 43%,
+    12% 32%,
+    24% 18%,
+    40% 25%,
+    38% 14%
+  );
   animation: petal-fall var(--dur, 20s) linear var(--delay, 0s) infinite;
   will-change: transform, opacity;
 }
