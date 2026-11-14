@@ -40,7 +40,10 @@ export function Home() {
           </Suspense>
         </motion.div>
 
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[42%] bg-gradient-to-t from-bg via-bg/70 to-transparent md:h-[55%]" />
+        {/* Two-stage vignette so the key art stays visible up top while the
+            name and intro sit on solid dark ground. */}
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[64%] bg-gradient-to-t from-bg via-bg/80 to-transparent md:h-[68%]" />
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[34%] bg-gradient-to-t from-bg to-transparent" />
         <div aria-hidden className="ink-wash pointer-events-none absolute inset-x-0 bottom-0 h-[62%] opacity-90" />
         <span aria-hidden className="stencil pointer-events-none absolute right-6 top-24 hidden text-[210px] leading-none lg:block">
           心
