@@ -464,9 +464,9 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
       <group ref={rig}>
         <group ref={group} position={[0, 0.3, 0]} scale={scale}>
           {moon && (
-            <mesh position={[0.55, 0.5, -2.6]} scale={5.4}>
+            <mesh position={[1.05, 0.8, -2.6]} scale={3.8}>
               <planeGeometry args={[1, 1]} />
-              <meshBasicMaterial map={moon} transparent depthWrite={false} opacity={0.9} />
+              <meshBasicMaterial map={moon} transparent depthWrite={false} opacity={0.34} />
             </mesh>
           )}
 
