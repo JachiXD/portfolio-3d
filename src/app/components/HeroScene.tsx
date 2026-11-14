@@ -391,10 +391,10 @@ function LanternMotes({ reduced }: { reduced: boolean }) {
 }
 
 /**
- * The hero sculpture: a glass bubble inside a wire shell and two orbit rings,
- * with a dot travelling the inner ring. The environment map is built from
- * lightformers, so there is no HDR download. Dragging (mouse or finger) spins
- * it, and phone tilt leans the whole rig.
+ * The hero sculpture: a hollow wire lattice inside a second, looser shell, two
+ * orbit rings and a dot travelling the inner one. The environment map is built
+ * from lightformers, so there is no HDR download. Dragging (mouse or finger)
+ * spins it, and phone tilt leans the whole rig.
  */
 function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolean; fine: boolean } & DragState) {
   const moon = useMoonTexture()
@@ -409,6 +409,7 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
   const rig = useRef<THREE.Group>(null)
   const group = useRef<THREE.Group>(null)
   const shell = useRef<THREE.Mesh>(null)
+  const lattice = useRef<THREE.Mesh>(null)
   const orbit = useRef<THREE.Group>(null)
   const counter = useRef<THREE.Group>(null)
 
@@ -425,7 +426,7 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
         }
     if (rig.current) {
       // Big, readable angles plus a slide across the frame: a sphere spinning in
-      // place still looks like a sphere, so the orbit rings, the wire shell and
+      // place still looks like a sphere, so the orbit rings, the wire shells and
       // the shift of the whole silhouette are what make the tilt obvious.
       rig.current.rotation.x = THREE.MathUtils.damp(rig.current.rotation.x, lean.y * 0.25, 5, d)
       rig.current.rotation.y = THREE.MathUtils.damp(rig.current.rotation.y, lean.x * 0.38, 5, d)
@@ -450,6 +451,10 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
       shell.current.rotation.y -= d * 0.05
       shell.current.rotation.z += d * 0.03
     }
+    if (lattice.current) {
+      lattice.current.rotation.y += d * 0.07
+      lattice.current.rotation.x -= d * 0.02
+    }
     if (orbit.current) orbit.current.rotation.z += d * 0.36
     if (counter.current) counter.current.rotation.z -= d * 0.1
   })
@@ -465,25 +470,12 @@ function Core({ reduced, spin, tilt, dragging, device, fine }: { reduced: boolea
             </mesh>
           )}
 
-          {/* A glass bubble instead of a black planet: barely-there ivory with
-              a tight specular edge and a thin iridescent skin, so the key art
-              reads straight through it while it still holds real space. */}
-          <mesh>
-            <sphereGeometry args={[1.26, 96, 96]} />
-            <meshPhysicalMaterial
-              color={IVORY}
-              metalness={0.18}
-              roughness={0.04}
-              transparent
-              opacity={0.16}
-              envMapIntensity={2.4}
-              clearcoat={1}
-              clearcoatRoughness={0.05}
-              iridescence={0.8}
-              iridescenceIOR={1.35}
-              depthWrite={false}
-              side={THREE.DoubleSide}
-            />
+          {/* Not a solid ball at all: a hollow ivory lattice, thin enough that
+              her key art reads straight through the middle of the sculpture.
+              Two wire shells turning against each other keep the volume. */}
+          <mesh ref={lattice}>
+            <sphereGeometry args={[1.22, 26, 18]} />
+            <meshBasicMaterial color={IVORY} wireframe transparent opacity={0.16} depthWrite={false} />
           </mesh>
 
           <mesh ref={shell}>
