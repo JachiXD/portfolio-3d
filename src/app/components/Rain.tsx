@@ -17,6 +17,10 @@ interface Drop {
  * slight wind lean, a thin frame budget (the loop pauses with the tab and caps
  * the device pixel ratio), and under reduced motion it paints a single still
  * frame instead of animating.
+ *
+ * The page moving makes the weather answer: while the visitor scrolls the
+ * streaks fall faster and brighter, and once they stop it eases back to the
+ * quiet baseline over about a second.
  */
 export function Rain({ density = 1 }: { density?: number }) {
   const ref = useRef<HTMLCanvasElement>(null)
@@ -32,6 +36,8 @@ export function Rain({ density = 1 }: { density?: number }) {
     let height = 0
     let frame = 0
     let previous = 0
+    let lastScroll = window.scrollY
+    let gust = 0
 
     const between = (min: number, max: number) => min + Math.random() * (max - min)
 
@@ -58,9 +64,13 @@ export function Rain({ density = 1 }: { density?: number }) {
 
     const paint = (delta: number | null) => {
       ctx.clearRect(0, 0, width, height)
+      // One multiplier for both: a gust quickens the fall and lifts the streaks
+      // toward full brightness, never past it.
+      const speedScale = 1 + gust * 1.1
+      const alphaScale = 1 + gust * 0.9
       for (const drop of drops) {
         if (delta !== null) {
-          drop.y += drop.speed * delta
+          drop.y += drop.speed * speedScale * delta
           drop.x += drop.drift * delta * 8
           if (drop.y - drop.len > height) {
             const next = make(false)
@@ -72,8 +82,8 @@ export function Rain({ density = 1 }: { density?: number }) {
             drop.drift = next.drift
           }
         }
-        ctx.strokeStyle = `rgba(248, 239, 228, ${drop.alpha})`
-        ctx.lineWidth = 1
+        ctx.strokeStyle = `rgba(248, 239, 228, ${Math.min(1, drop.alpha * alphaScale)})`
+        ctx.lineWidth = 1 + gust * 0.35
         ctx.beginPath()
         ctx.moveTo(drop.x, drop.y)
         ctx.lineTo(drop.x - drop.drift, drop.y + drop.len)
@@ -84,6 +94,18 @@ export function Rain({ density = 1 }: { density?: number }) {
     const tick = (now: number) => {
       const delta = previous ? Math.min((now - previous) / 1000, 0.05) : 0.016
       previous = now
+
+      // How far the page travelled this frame, normalised into a 0..1 gust.
+      const scroll = window.scrollY
+      const travelled = Math.abs(scroll - lastScroll)
+      lastScroll = scroll
+      const target = Math.min(travelled / 90, 1)
+      // Rise quickly while moving, fall away gently once the page is still:
+      // the two time constants are what make it feel like weather, not a toggle.
+      const response = target > gust ? 12 : 2.6
+      gust += (target - gust) * (1 - Math.exp(-response * delta))
+      if (gust < 0.002) gust = 0
+
       paint(delta)
       frame = window.requestAnimationFrame(tick)
     }
@@ -91,6 +113,7 @@ export function Rain({ density = 1 }: { density?: number }) {
     const start = () => {
       if (frame || reduced.matches) return
       previous = 0
+      lastScroll = window.scrollY
       frame = window.requestAnimationFrame(tick)
     }
 
@@ -104,6 +127,7 @@ export function Rain({ density = 1 }: { density?: number }) {
     const onMotion = () => {
       if (reduced.matches) {
         stop()
+        gust = 0
         paint(null)
       } else {
         start()
