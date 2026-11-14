@@ -137,14 +137,9 @@ export function Home() {
 
       <PinnedStatement />
 
-      {/* Chapter 肆 — the character showcase, held back until the work has
-          introduced him. Scroll drives the framing, so the portrait travels
-          and settles instead of just sitting on the page. */}
-      <CharacterChapter />
-
-      {/* Chapter 伍 — about */}
+      {/* Chapter 肆 — about */}
       <section className="mx-auto max-w-[1400px] px-5 pt-32 sm:px-8 sm:pt-44">
-        <SectionHead index="伍" label="THE DEVELOPER" jp="人" title="Human in the machine" aside="INDIA · OPEN" />
+        <SectionHead index="肆" label="THE DEVELOPER" jp="人" title="Human in the machine" aside="INDIA · OPEN" />
         <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
           <Reveal>
             <div className="relative border border-accent-3/20 bg-surface/50 p-2">
@@ -178,17 +173,22 @@ export function Home() {
         </div>
       </section>
 
-      {/* Chapter 陸 — skills */}
+      {/* Chapter 伍 — skills */}
       <section className="mx-auto max-w-[1400px] px-5 pt-32 sm:px-8 sm:pt-44">
-        <SectionHead index="陸" label="TOOLKIT" jp="技" title="Skills & expertise" aside="12 SYSTEMS SYNCED" />
+        <SectionHead index="伍" label="TOOLKIT" jp="技" title="Skills & expertise" aside="12 SYSTEMS SYNCED" />
         <Skills />
       </section>
 
-      {/* Chapter 柒 — honours */}
+      {/* Chapter 陸 — honours */}
       <section className="mx-auto max-w-[1400px] px-5 pt-32 sm:px-8 sm:pt-44">
-        <SectionHead index="柒" label="RECORD" jp="績" title="Achievements" aside="3 ENTRIES · VERIFIED" />
+        <SectionHead index="陸" label="RECORD" jp="績" title="Achievements" aside="3 ENTRIES · VERIFIED" />
         <Achievements />
       </section>
+
+      {/* Chapter 柒 — the character showcase closes the page, after all of his
+          own work. Scroll drives the framing, so the portrait travels and
+          settles instead of just sitting on the page. */}
+      <CharacterChapter />
     </>
   )
 }
@@ -259,7 +259,7 @@ function CharacterChapter() {
 
           <motion.div style={reduced ? undefined : { y: copyY }} className="relative">
             <div className="flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.26em] text-faint">
-              <span className="text-accent">肆</span>
+              <span className="text-accent">柒</span>
               <span className="crescent size-2.5 text-accent-2" />
               <span>THE MOON FOX</span>
               <span className="jp text-[11px] normal-case tracking-[0.14em] text-muted">月華</span>
