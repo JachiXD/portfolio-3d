@@ -58,9 +58,9 @@ export function Rain({ density = 1 }: { density?: number }) {
       x: between(0, width),
       y: spread ? between(0, height) : between(-40, 0),
       len: 0,
-      radius: between(1.4, 3.4),
+      radius: between(1.9, 4.4),
       speed: between(26, 82),
-      alpha: between(0.16, 0.42),
+      alpha: between(0.24, 0.52),
     })
 
     const respawn = (mote: Mote) => {
@@ -101,15 +101,21 @@ export function Rain({ density = 1 }: { density?: number }) {
 
         if (mote.kind === 'bead') {
           if (mote.y - mote.radius < 0) continue
-          // A bead of water: soft body, bright inner highlight, faint rim.
-          ctx.fillStyle = `rgba(248, 239, 228, ${Math.min(1, mote.alpha * 0.5 * lift)})`
+          // A bead of water: a faint halo, a soft body, and a bright highlight
+          // that catches the moonlight.
+          ctx.fillStyle = `rgba(248, 239, 228, ${Math.min(1, mote.alpha * 0.16 * lift)})`
+          ctx.beginPath()
+          ctx.arc(mote.x, mote.y, mote.radius * 1.9, 0, Math.PI * 2)
+          ctx.fill()
+
+          ctx.fillStyle = `rgba(248, 239, 228, ${Math.min(1, mote.alpha * 0.58 * lift)})`
           ctx.beginPath()
           ctx.arc(mote.x, mote.y, mote.radius, 0, Math.PI * 2)
           ctx.fill()
 
-          ctx.fillStyle = `rgba(255, 252, 246, ${Math.min(1, mote.alpha * 1.5 * lift)})`
+          ctx.fillStyle = `rgba(255, 252, 246, ${Math.min(1, mote.alpha * 1.7 * lift)})`
           ctx.beginPath()
-          ctx.arc(mote.x - mote.radius * 0.3, mote.y - mote.radius * 0.34, mote.radius * 0.36, 0, Math.PI * 2)
+          ctx.arc(mote.x - mote.radius * 0.3, mote.y - mote.radius * 0.34, mote.radius * 0.42, 0, Math.PI * 2)
           ctx.fill()
           continue
         }
