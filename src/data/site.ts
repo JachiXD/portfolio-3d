@@ -43,6 +43,8 @@ export const characterSheet = {
 export interface Project {
   slug: string
   title: string
+  /** Full name, shown under the display title on the study page. */
+  subtitle?: string
   client: string
   category: string
   year?: string
@@ -97,6 +99,7 @@ export const projects: Project[] = [
   {
     slug: 'riko',
     title: 'Riko',
+    subtitle: 'Interactive AI Companion',
     client: 'Personal project',
     category: 'Interactive AI companion',
     year: '2026',
@@ -105,18 +108,18 @@ export const projects: Project[] = [
     summary: 'Riko is an experimental AI companion project featuring an interactive character interface with voice and text-based conversations. Designed to combine conversational AI with a character-driven experience, Riko aims to make digital interactions feel more personal and engaging.',
     role: ['Character and scene', 'Conversation pipeline', 'Voice pipeline', 'Front-end'],
     deliverables: [
-      'Gemini-powered conversation with context',
+      'On-device conversation model with context',
       'Persistent memory with a review panel',
       'Robust browser speech recognition',
       'Neural voice running locally',
       'Lip sync and body motion',
     ],
-    stack: ['JavaScript', 'three.js', '@pixiv/three-vrm', 'Web Speech API', 'Gemini API', 'Kokoro TTS', 'GitHub Pages'],
+    stack: ['JavaScript', 'three.js', '@pixiv/three-vrm', 'Web Speech API', 'Kokoro TTS', 'WebLLM', 'GitHub Pages'],
     link: 'https://jachixd.github.io/riko-web/',
     body: [
       'Riko is a character you can talk to inside a browser tab. You press the mic and speak, or type if the room is quiet, and she answers out loud while a 3D model watches you — head turning, nodding, blinking — instead of a text box filling in below a static portrait.',
-      'The interesting constraint was that the original version was a Python desktop program: a local microphone loop, a desktop window and API keys. None of that survives on a static site, so the browser build rebuilds the loop around what a browser already has — speech recognition for ears, a neural voice model running on the visitor’s own machine for her voice, and three-vrm for the character. She still runs from GitHub Pages with no server of her own: the conversation model is reached directly with a key the visitor keeps in their own browser, so there is no shared secret to leak and no bill to run up.',
-      'Most of the work went into the details that make a model read as alive: the mouth follows the real loudness of her own audio rather than a guessed animation, the camera measures the model instead of assuming its size, and Japanese words are spoken with the correct pronunciation rather than an English voice flattening them.',
+      'The interesting constraint was that the original version was a Python desktop program: a local microphone loop, a desktop window and API keys. None of that survives on a static site, so the browser build rebuilds the loop around what a browser already has — speech recognition for her ears, an open-source neural voice model synthesising on the visitor’s own machine, and three-vrm for the character. She runs from GitHub Pages with no server of her own: the voice and the conversation model both execute in the tab, with no account, no API key and no per-message cost.',
+      'Most of the work went into the details that make a model read as alive: the mouth follows a viseme plan timed to the clip and is gated by the real loudness of her own audio rather than a guessed animation, and the camera measures the model instead of assuming its size. She is also honest about failing — if synthesis produces silence or breaks, she rotates to another engine, then to the device voice, instead of miming speech with no sound behind it.',
       'The second pass was about the parts that were not actually working. Her replies originally came from a keyword script, so anything outside its patterns got a random canned line; she now talks to a language model with the full conversation in hand, admits when she has not understood, and keeps a small store of durable facts about the person — their name, interests, projects — that survives a refresh and can be reviewed, edited or cleared from a panel in her own interface. Her ears were rebuilt too: the microphone now listens in the language she answers in, waits through natural pauses, and asks for a repeat instead of sending a half-heard sentence off to be answered.',
     ],
     size: 'large',
