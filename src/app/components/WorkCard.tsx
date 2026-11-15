@@ -33,9 +33,7 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
       className={cx(project.size === 'large' ? 'md:col-span-2' : 'md:col-span-1')}
     >
       <motion.div style={{ rotateX, rotateY, transformPerspective: 1200 }} className="card-3d">
-        <div
-          ref={ref}
-          className="group relative block border border-line bg-surface/70 p-2 backdrop-blur-sm transition-colors hover:border-accent/60"
+        <div ref={ref} className="group relative block border border-line bg-surface/70 p-2 backdrop-blur-sm transition-colors hover:border-accent/60"
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => {
             setHover(false)
@@ -56,7 +54,7 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
             <span>{project.category}</span>
           </div>
 
-          <dir
+          <div
             className={cx('relative overflow-hidden border border-line/60', project.size === 'large' ? 'aspect-[16/10]' : 'aspect-[4/5] md:aspect-[4/4.6]')}
             style={{ background: project.tint, transform: 'translateZ(30px)' }}
           >
