@@ -11,8 +11,8 @@ import { Parallax } from './motion'
  * while the cover sits on a raised layer, so the tilt reads as depth rather
  * than a skew. Springs keep it from feeling twitchy.
  *
- * A project with a live site gets that site behind its cover — the plate is
- * what people try to click — while the title stays the way into the study.
+ * The card opens the study; a project with a live site carries a small LIVE
+ * link on the cover so the site is one click away without hijacking the card.
  */
 export function WorkCard({ project, index = 0 }: { project: Project; index?: number }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -77,7 +77,7 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
                 hover ? 'scale-100 opacity-100' : 'scale-75 opacity-0',
               )}
             >
-              {project.link ? 'OPEN LIVE SITE' : 'OPEN STUDY'}
+              OPEN STUDY
               <span aria-hidden>↗</span>
             </motion.span>
             {/* The drawn plates already carry their own footer line. */}
@@ -85,33 +85,31 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
               <span aria-hidden className="absolute bottom-3 right-3 font-mono text-[8px] uppercase tracking-[0.18em] text-white/45">SCALE 1:1</span>
             )}
 
-            {project.link ? (
-              // The cover is the thing people try to click on a live project, so it
-              // opens the site. The study stays reachable through the title below.
+            {/* The live site sits on top of the cover link, so it stays
+                reachable without taking the card away from the study. */}
+            {project.link && (
               <a
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`Open ${project.title} — live project`}
-                className="absolute inset-0 z-10 flex items-end justify-start p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                aria-label={`Open ${project.title} live project in a new tab`}
+                className="absolute right-3 top-3 z-20 inline-flex items-center gap-1.5 border border-white/25 bg-black/50 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm transition-colors hover:border-accent hover:bg-accent hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
-                <span className="inline-flex items-center gap-1.5 border border-white/25 bg-black/50 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-fg">
-                  LIVE PROJECT
-                  <span aria-hidden className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
-                </span>
+                LIVE
+                <span aria-hidden>↗</span>
               </a>
-            ) : (
-              <Link
-                to={`/work/${project.slug}`}
-                aria-label={`Open ${project.title} study`}
-                className="absolute inset-0 z-10 flex items-end justify-start p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-              >
-                <span className="inline-flex items-center gap-1.5 border border-white/25 bg-black/50 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-fg">
-                  VIEW STUDY
-                  <span aria-hidden className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
-                </span>
-              </Link>
             )}
+
+            <Link
+              to={`/work/${project.slug}`}
+              aria-label={`Open ${project.title} study`}
+              className="absolute inset-0 z-10 flex items-end justify-start p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            >
+              <span className="inline-flex items-center gap-1.5 border border-white/25 bg-black/50 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-fg">
+                VIEW STUDY
+                <span aria-hidden className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+              </span>
+            </Link>
           </div>
 
           <div className="mt-3 flex items-baseline justify-between gap-4 px-1" style={{ transform: 'translateZ(16px)' }}>

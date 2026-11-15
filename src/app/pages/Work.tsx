@@ -35,7 +35,12 @@ export function Work() {
       </div>
 
       <div className="mt-8 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-        <Lines as="h1" className="font-display bloom text-[clamp(56px,10vw,150px)]" lines={[project.title]} />
+        <div>
+          {project.subtitle && (
+            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-accent-3">{project.subtitle}</p>
+          )}
+          <Lines as="h1" className="font-display bloom text-[clamp(56px,10vw,150px)]" lines={[project.title]} />
+        </div>
         <Reveal delay={0.2} className="max-w-md border-l border-accent-3/50 pl-4 text-pretty text-[16px] leading-relaxed text-muted lg:pb-4">
           {project.summary}
         </Reveal>
